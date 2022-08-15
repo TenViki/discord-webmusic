@@ -1,0 +1,26 @@
+.hero {
+  height: 100vh;
+  background-image: linear-gradient(to right, #12121288, transparent 70%),
+    url("https://unsplash.com/photos/FO7JIlwjOtU/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8MTB8fHRlY2h8ZW58MHx8fHwxNjU3NjU2Njg0&force=true&w=2400");
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+
+  .hero-logo {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 3rem;
+  }
+
+  &-text {
+    margin-left: 5rem;
+
+    p {
+      margin-bottom: 0.5rem;
+    }
+  }
+}

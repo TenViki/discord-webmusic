@@ -1,0 +1,82 @@
+@import "./config/theme.scss";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background-color: #121212;
+  color: #fff;
+  font-family: "Nunito", sans-serif;
+}
+
+h1 {
+  font-weight: 100;
+  font-size: 2.6rem;
+}
+
+html,
+body,
+.app {
+  height: 100%;
+}
+
+.error-message {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 100;
+}
+
+.loading-text {
+  display: flex;
+  color: gray;
+  align-items: center;
+  .loading {
+    margin-right: 0.5rem;
+    .d1,
+    .d2 {
+      background-color: gray;
+    }
+  }
+}
+
+.page {
+  margin: 1rem;
+
+  &-header {
+    display: flex;
+    align-items: center;
+
+    .icon-back {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      width: 2rem;
+      height: 100%;
+      transition: 0.2s;
+
+      &:hover {
+        color: $p1;
+      }
+
+      svg {
+        width: 1.7rem;
+        height: 1.7rem;
+      }
+    }
+
+    .server-icon-header {
+      width: 3rem;
+      height: 3rem;
+      margin: 0 1rem;
+      border-radius: 0.5rem;
+    }
+
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 100;
+    }
+  }
+}

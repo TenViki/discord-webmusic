@@ -1,0 +1,107 @@
+@import "../../config/theme.scss";
+
+$loading-offset: 4px;
+
+.loading {
+  position: relative;
+
+  width: 3rem;
+  height: 3rem;
+
+  &.small {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  &.large {
+    width: 4rem;
+    height: 4rem;
+
+    .d1,
+    .d2 {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  .d1,
+  .d2 {
+    position: absolute;
+    background-color: var(--color);
+    width: 7px;
+    height: 7px;
+    top: $loading-offset;
+    left: $loading-offset;
+    border-radius: 50%;
+  }
+
+  .d1 {
+    animation: loading-d1 1.75s infinite;
+  }
+
+  .d2 {
+    animation: loading-d2 1.75s infinite;
+  }
+}
+
+@keyframes loading-d1 {
+  0% {
+    top: $loading-offset;
+  }
+
+  25% {
+    top: calc(100% - $loading-offset);
+    transform: translateY(-100%);
+    left: $loading-offset;
+  }
+
+  //noinspection SyntaxError
+  50% {
+    top: $loading-offset;
+    left: calc(100% - $loading-offset);
+    transform: translateX(-100%);
+  }
+
+  //noinspection SyntaxError
+  75% {
+    top: calc(100% - $loading-offset);
+    left: calc(100% - $loading-offset);
+    transform: translate(-100%, -100%);
+  }
+}
+
+@keyframes loading-d2 {
+  //noinspection SyntaxError
+  0% {
+    top: calc(100% - $loading-offset);
+    left: calc(100% - $loading-offset);
+    transform: translate(-100%, -100%);
+  }
+
+  //noinspection SyntaxError
+  25% {
+    top: $loading-offset;
+    transform: translateX(-100%);
+    left: calc(100% - $loading-offset);
+  }
+
+  //noinspection SyntaxError
+  50% {
+    top: calc(100% - $loading-offset);
+    left: $loading-offset;
+    transform: translateY(-100%);
+  }
+
+  75% {
+    top: $loading-offset;
+    left: $loading-offset;
+    transform: translate(0);
+  }
+
+  //noinspection SyntaxError
+  100% {
+    top: calc(100% - $loading-offset);
+    left: calc(100% - $loading-offset);
+    transform: translate(-100%, -100%);
+  }
+}

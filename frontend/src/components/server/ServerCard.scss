@@ -1,0 +1,48 @@
+@import "../../config/theme.scss";
+
+.server {
+  display: flex;
+  background-color: #252525;
+  border-radius: 0.5rem;
+  align-items: center;
+  padding: 1rem;
+  transition: 0.2s;
+
+  &:hover {
+    background-color: #333;
+
+    .server-icon span {
+      background-color: $p1;
+    }
+  }
+
+  margin-bottom: 1rem;
+
+  &-name {
+    flex-grow: 1;
+  }
+
+  &-icon {
+    width: 4rem;
+    height: 4rem;
+    margin-right: 1rem;
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 0.3rem;
+    }
+
+    span {
+      transition: 0.2s;
+      border-radius: 0.3rem;
+      display: flex;
+      width: 4rem;
+      height: 4rem;
+      background-color: #555;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+  }
+}

@@ -1,0 +1,196 @@
+@import "../../config/theme.scss";
+
+$buttonStyles: (
+  "success": $success,
+  "danger": $danger,
+  "warning": $warning,
+  "grey": $d5,
+  "discord": $discordColor,
+);
+
+.button {
+  display: flex;
+  background-color: $p1;
+  border-radius: 0.3rem;
+  min-height: 2.5rem;
+  font-size: 1rem;
+  color: #fff;
+  outline: 0;
+  border: 0;
+  cursor: pointer;
+  align-items: center;
+  transition: 0.2s;
+  padding: 0;
+
+  &.fullwidth {
+    width: 100%;
+
+    .button-text {
+      flex-grow: 1;
+      text-align: center;
+    }
+  }
+
+  &.not-centered {
+    .button-text {
+      text-align: left;
+    }
+  }
+
+  .loading {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+  }
+
+  .button-righticon,
+  .button-lefticon {
+    width: 2.5rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  .button-text {
+    padding: 0 1rem;
+
+    &:not(:last-child) {
+      padding-right: 0.2rem;
+    }
+
+    &:not(:first-child) {
+      padding-left: 0.2rem;
+    }
+  }
+
+  &:hover {
+    background-color: lighten($p1, 5%);
+  }
+
+  &:active {
+    background-color: darken($p1, 5%);
+  }
+
+  &:disabled {
+    background-color: darken($p1, 25%);
+    color: rgba(#fff, 0.5);
+    cursor: context-menu;
+  }
+
+  @each $buttonStyle, $color in $buttonStyles {
+    &.#{$buttonStyle} {
+      background-color: $color;
+
+      &:hover {
+        background-color: lighten($color, 5%);
+      }
+
+      &:active {
+        background-color: darken($color, 5%);
+      }
+
+      &:disabled {
+        background-color: darken($color, 25%);
+      }
+    }
+  }
+
+  &.grey {
+    &:disabled {
+      background-color: darken($d5, 15%);
+    }
+  }
+
+  &.outlined {
+    background-color: transparent;
+    border: 1px solid $p1;
+    color: $p1;
+
+    &:hover {
+      background-color: transparent;
+      border-color: lighten($p1, 10%);
+    }
+
+    &:active {
+      background-color: transparent;
+      border-color: darken($p1, 10%);
+    }
+
+    &:disabled {
+      border-color: $p1;
+      opacity: 0.5;
+    }
+
+    @each $buttonStyle, $color in $buttonStyles {
+      &.#{$buttonStyle} {
+        border-color: $color;
+        color: $color;
+
+        &:hover {
+          background-color: transparent;
+          border-color: lighten($color, 15%);
+        }
+
+        &:active {
+          background-color: transparent;
+          border-color: darken($color, 10%);
+        }
+
+        &:disabled {
+          border-color: $color;
+          background: transparent;
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+
+  &.text {
+    background-color: transparent;
+    color: $p1;
+
+    &:hover {
+      background-color: rgba($p1, 0.1);
+    }
+
+    &:active {
+      background-color: transparent;
+    }
+
+    &:active {
+      background-color: rgba($p1, 0.2);
+    }
+
+    &:disabled {
+      background-color: transparent;
+      opacity: 0.5;
+    }
+
+    @each $buttonStyle, $color in $buttonStyles {
+      &.#{$buttonStyle} {
+        border-color: $color;
+        color: $color;
+
+        &:hover {
+          background-color: rgba($color, 0.1);
+        }
+
+        &:active {
+          background-color: rgba($color, 0.2);
+        }
+
+        &:disabled {
+          border-color: $color;
+          background: transparent;
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}
