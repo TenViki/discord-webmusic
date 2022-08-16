@@ -36,6 +36,12 @@ export const getGuilds = async (
   }));
 };
 
+export const userHasAdminInGuild = async (auth: IAuth, guild: string) => {
+  const userGuilds = await getGuilds(auth);
+
+  return userGuilds.some((g) => g.id === guild);
+};
+
 export const getChannelsInGuild = async (
   auth: IAuth,
   guildId: string,

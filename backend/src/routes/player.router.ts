@@ -1,11 +1,17 @@
 import { Router } from "express";
 import { discordAuthMiddleware } from "../middleware/discord-auth";
+import { userHasAdminInGuild } from "../services/discord.service";
 import { createQueue } from "../services/music.service";
 
 const router = Router();
 
 router.post("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
   if (!req.auth) return res.status(401).send({ error: "Not authenticated" });
+
+  // Check if user has admin in guild
+  if (!userHasAdminInGuild(req.auth, req.params.guildId))
+    return res.status(401).send({ error: "Not authorized" });
+
   const { channelId } = req.body;
   const { guildId } = req.params;
 

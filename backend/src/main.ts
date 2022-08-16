@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+
+import { createServer } from "http";
+
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 
@@ -8,6 +11,7 @@ import cors from "cors";
 import { setup } from "./bot/bot";
 import axios from "axios";
 import { Player } from "discord-player";
+import { Server } from "socket.io";
 
 dotenv.config();
 
@@ -42,12 +46,25 @@ const main = async () => {
 
   // Start listening
   const port = process.env.PORT || 3000;
-  app.listen(port, () => {
+
+  const httpServer = createServer(app);
+
+  httpServer.listen(port, () => {
     console.log(`BetterGithub app is listening on port ${port}`);
   });
 
   // Setup bot
   setup();
+
+  const io = new Server(httpServer, {
+    cors: {
+      origin: ["http://localhost:5173"],
+    },
+  });
+
+  io.on("connection", (socket) => {
+    console.log("New client connected " + socket.id);
+  });
 };
 
 main();
