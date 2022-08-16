@@ -1,6 +1,5 @@
 import React from "react";
 import { useQuery } from "react-query";
-import { useNavigate } from "react-router";
 import { getGuilds } from "../api/servers";
 import Loading from "../components/loading/Loading";
 import ServerCard from "../components/server/ServerCard";
@@ -9,7 +8,6 @@ import "./Servers.scss";
 
 const Servers = () => {
   const { user } = React.useContext(UserContext);
-  const navigate = useNavigate();
 
   const { isLoading, data } = useQuery(
     ["guilds", user?.id],
