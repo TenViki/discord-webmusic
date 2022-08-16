@@ -7,6 +7,7 @@ import { setupRoutes } from "./routes/router";
 import cors from "cors";
 import { setup } from "./bot/bot";
 import axios from "axios";
+import { Player } from "discord-player";
 
 dotenv.config();
 
