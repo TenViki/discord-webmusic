@@ -2,7 +2,6 @@ import axios from "axios";
 import { PermissionsBitField } from "discord.js";
 import { bot } from "../bot/bot";
 import { IAuth } from "../models/auth.model";
-import { Webhook } from "../models/webhook.model";
 import { UserGuilds } from "../types/discord";
 import { refreshToken } from "./discordauth.service";
 
@@ -54,7 +53,6 @@ export const getChannelsInGuild = async (
   }
 
   const channels = bot.guilds.cache.get(guildId)!.channels.cache;
-  const webhooks = await Webhook.find({ guildId });
 
   return {
     channels: channels.map((channel) => ({
@@ -62,7 +60,6 @@ export const getChannelsInGuild = async (
       canSendMessages: channel
         .permissionsFor(bot.user!)
         ?.has(PermissionsBitField.Flags.SendMessages),
-      webhook: webhooks.find((webhook) => webhook.channel === channel.id),
     })),
     guild: adminUserGuilds.find((guild) => guild.id === guildId)!,
   };
