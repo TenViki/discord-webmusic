@@ -14,6 +14,27 @@ declare global {
   }
 }
 
+export const validateToken = async (token: string) => {
+  let sessionId: string;
+  try {
+    sessionId = (
+      jwt.verify(token, process.env.JWT_SECRET!) as {
+        sessionId: string;
+      }
+    ).sessionId;
+  } catch (error) {
+    return null;
+  }
+
+  const auth = await Auth.findOne({ _id: sessionId });
+  if (!auth) return null;
+
+  const user = await discordAuthService.getDiscordUser(auth);
+  if (!user) return null;
+
+  return user;
+};
+
 export const discordAuthMiddleware = async (
   req: Request,
   res: Response,
