@@ -6,6 +6,7 @@ import { getChannels } from "../api/servers";
 import Channel from "../components/channel/Channel";
 import Loading from "../components/loading/Loading";
 import { UserContext } from "../Router";
+import { DiscordChannelTypes } from "../types/discord";
 import "./Guild.scss";
 
 const Guild = () => {
@@ -53,7 +54,11 @@ const Guild = () => {
 
       <div className="channels">
         {data.data.channels
-          .filter((channel) => channel.type === "GUILD_TEXT")
+          .filter(
+            (channel) =>
+              channel.type === DiscordChannelTypes.GUILD_VOICE ||
+              channel.type === DiscordChannelTypes.GUILD_STAGE_VOICE
+          )
           .map((channel) => (
             <Channel
               key={channel.id}
