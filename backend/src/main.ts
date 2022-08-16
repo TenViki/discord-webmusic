@@ -12,6 +12,7 @@ import { setup } from "./bot/bot";
 import axios from "axios";
 import { Player } from "discord-player";
 import { Server } from "socket.io";
+import { validateToken } from "./middleware/discord-auth";
 
 dotenv.config();
 
@@ -64,6 +65,14 @@ const main = async () => {
 
   io.on("connection", (socket) => {
     console.log("New client connected " + socket.id);
+
+    socket.on("auth", async (token: string) => {
+      const user = await validateToken(token);
+
+      if (user) {
+        socket.emit("auth-success", user);
+      }
+    });
   });
 };
 
