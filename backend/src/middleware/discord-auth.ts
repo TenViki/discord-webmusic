@@ -51,8 +51,6 @@ export const discordAuthMiddleware = async (
     return res.status(401).send({ error: "Invalid token" });
   }
 
-  console.log("Wha??");
-
   const auth = await Auth.findOne({
     _id: sessionId,
   });

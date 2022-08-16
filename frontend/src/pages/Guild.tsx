@@ -17,7 +17,6 @@ const Guild = () => {
 
   useEffect(() => {
     if (!socket) return;
-    console.log("Emitting select");
     socket.emit("select-guild", guildId);
   }, [guildId, socket]);
 

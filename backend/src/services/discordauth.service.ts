@@ -6,7 +6,6 @@ import { DiscordUser } from "../types/auth";
 import { HydratedDocument } from "mongoose";
 
 export const getDiscordAuth = async (code: string) => {
-  console.log(process.env.DISCORD_REDIRECT_URI);
   const response = await axios.post<{
     access_token: string;
     refresh_token: string;
@@ -68,8 +67,6 @@ export const refreshToken = async (auth: IAuth) => {
     return auth.discordAccessToken;
   }
 
-  console.log("Refreshing token");
-
   const response = await axios.post<{
     access_token: string;
     refresh_token: string;
@@ -92,8 +89,6 @@ export const refreshToken = async (auth: IAuth) => {
     }
   );
 
-  console.log("Token refreshed", response.data.access_token);
-
   auth.discordAccessToken = response.data.access_token;
   auth.discordRefreshToken = response.data.refresh_token;
   auth.tokenExpires = new Date(Date.now() + response.data.expires_in * 1000);
@@ -105,8 +100,6 @@ export const getDiscordUser = async (
   refresh?: boolean
 ): Promise<DiscordUser> => {
   if (refresh === undefined || refresh) await refreshToken(auth);
-
-  console.log("Using access token: ", auth.discordAccessToken);
 
   const response = await axios.get<DiscordUser>(
     "https://discordapp.com/api/users/@me",

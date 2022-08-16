@@ -7,7 +7,6 @@ import { refreshToken } from "./discordauth.service";
 
 export const getUserGuilds = async (auth: IAuth) => {
   await refreshToken(auth);
-  console.log("Here!", auth.discordAccessToken);
   const response = await axios.get<UserGuilds[]>(
     "https://discordapp.com/api/users/@me/guilds",
     {
@@ -39,7 +38,6 @@ export const getGuilds = async (
 const adminCache = new Map<string, boolean>();
 
 export const userHasAdminInGuild = async (auth: IAuth, guild: string) => {
-  console.log(adminCache.has(auth.userId + "-" + guild));
   if (adminCache.has(auth.userId + "-" + guild))
     return adminCache.get(auth.userId + "-" + guild);
 

@@ -15,11 +15,9 @@ export class SocketManager {
 
   public static async registerEvents(socket: Socket) {
     socket.on("select-guild", async (guildId) => {
-      console.log("Select guild", guildId);
       const auth = SocketManager.socketClients.get(socket.id);
       if (!auth) return;
 
-      console.log("Hello");
       if (await userHasAdminInGuild(auth, guildId)) {
         const oldGuild = SocketManager.socketGuilds.get(socket.id);
         if (oldGuild) socket.leave(oldGuild);

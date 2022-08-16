@@ -20,8 +20,6 @@ const Redirect = () => {
   });
 
   React.useEffect(() => {
-    console.log("Triggered");
-
     // Get 'code' query parameter from URL
     const code = new URLSearchParams(window.location.search).get("code");
 
@@ -30,7 +28,6 @@ const Redirect = () => {
     // Send request to backend to exchange code for access token
 
     sendCodeMutation.mutateAsync(code).then((data) => {
-      console.log(data);
       const user = data.data as DiscordUser;
       setUser(user);
       navigate("/");

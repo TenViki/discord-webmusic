@@ -14,9 +14,6 @@ const Servers = () => {
     () => getGuilds(localStorage.getItem("token")!),
     {
       enabled: !!user,
-      onSuccess: (data) => {
-        console.log(data);
-      },
     }
   );
 
