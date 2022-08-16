@@ -3,6 +3,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router";
 import { getChannels } from "../api/servers";
+import Button from "../components/button/Button";
 import Channel from "../components/channel/Channel";
 import Loading from "../components/loading/Loading";
 import { UserContext } from "../Router";
@@ -12,8 +13,6 @@ import "./Guild.scss";
 const Guild = () => {
   const { user } = React.useContext(UserContext);
   const guildId = useParams().guildId;
-
-  const [selectedChannel, setSelectedChannel] = React.useState<string>("");
 
   const navigate = useNavigate();
 
@@ -52,7 +51,29 @@ const Guild = () => {
         <h1>{data.data.guild.name}</h1>
       </div>
 
-      <div className="channels">
+      <div className="guild-not-playing">
+        <div className="not-playing-header">
+          To create a queue, select channel:
+        </div>
+
+        <div className="channels">
+          {data.data.channels
+            .filter(
+              (channel) =>
+                channel.type === DiscordChannelTypes.GUILD_VOICE ||
+                channel.type === DiscordChannelTypes.GUILD_STAGE_VOICE
+            )
+            .map((channel) => (
+              <Channel
+                key={channel.id}
+                channel={channel}
+                guildId={data.data.guild.id}
+              />
+            ))}
+        </div>
+      </div>
+
+      {/* <div className="channels">
         {data.data.channels
           .filter(
             (channel) =>
@@ -68,7 +89,7 @@ const Guild = () => {
               guildId={data.data.guild.id}
             />
           ))}
-      </div>
+      </div> */}
     </div>
   );
 };

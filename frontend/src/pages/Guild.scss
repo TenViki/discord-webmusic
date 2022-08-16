@@ -10,7 +10,14 @@
   border-radius: 0.5rem;
 }
 
-.channels {
-  width: fit-content;
+.guild-not-playing {
+  padding: 1rem;
   margin-top: 1rem;
+  border-radius: .5rem;
+  border: 1px solid #333;
+  width: min(100%, 40rem);
+}
+
+.not-playing-header{
+  margin-bottom: 1rem;
 }

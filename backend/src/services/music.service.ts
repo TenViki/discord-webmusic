@@ -6,4 +6,10 @@ export const searchMusic = (q: string, auth: IAuth) => {
   return player.search(q, { requestedBy: auth.userId });
 };
 
-export const createQueue = async (guildId: string, channelId: string) => {};
+export const createQueue = async (guildId: string, channelId: string) => {
+  return player.createQueue(guildId, {
+    metadata: {
+      channelId: channelId,
+    },
+  });
+};
