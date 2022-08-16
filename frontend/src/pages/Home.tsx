@@ -6,13 +6,23 @@ import { useNavigate } from "react-router";
 import { UserContext } from "../Router";
 import React from "react";
 
-const Home = () => {
+interface HomeProps {
+  backgroundUrl: string;
+}
+
+const Home: React.FC<HomeProps> = ({ backgroundUrl }) => {
   const navigate = useNavigate();
   const { user } = React.useContext(UserContext);
 
   return (
     <div className="home">
-      <div className="hero">
+      <div
+        className="hero"
+        style={{
+          backgroundImage: `Linear-gradient(to right, #12121288, transparent 70%),
+    url("${backgroundUrl}")`,
+        }}
+      >
         <div className="hero-text">
           <h1>Zexel</h1>
           <p>Take your music playing on discord to another level</p>

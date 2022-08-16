@@ -11,6 +11,7 @@ import { getUser } from "./api/login";
 import Servers from "./pages/Servers";
 import Guild from "./pages/Guild";
 import { io, Socket } from "socket.io-client";
+import { getBackgroundImage } from "./utils/background";
 
 export const UserContext = React.createContext<{
   user: DiscordUser | null;
@@ -25,6 +26,7 @@ export const SocketContext = React.createContext<Socket | null>(null);
 const Router = () => {
   const [user, setUser] = React.useState<DiscordUser | null>(null);
   const [socket, setSocket] = React.useState<Socket | null>(null);
+  const [backgroundimage] = React.useState<string>(getBackgroundImage());
 
   useQuery("user", () => getUser(localStorage.getItem("token")!), {
     enabled: !!localStorage.getItem("token"),
@@ -50,7 +52,10 @@ const Router = () => {
 
         <main>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route
+              path="/"
+              element={<Home backgroundUrl={backgroundimage} />}
+            />
             <Route path="/auth/redirect" element={<Redirect />} />
             <Route path="/servers" element={<Servers />} />
             <Route path="/servers/:guildId" element={<Guild />} />
