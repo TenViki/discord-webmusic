@@ -41,7 +41,7 @@ const ServerCard: FC<ServerCardProps> = ({ server }) => {
             color="grey"
             onClick={() =>
               window.open(
-                `https://discord.com/api/oauth2/authorize?client_id=996475473615912960&permissions=2048&scope=bot&guild_id=${server.id}`,
+                `https://discord.com/api/oauth2/authorize?client_id=1008791063839912046&permissions=2048&scope=bot&guild_id=${server.id}`,
                 `Invite BetterGithub to ${server.name}`,
                 "width=500,height=900"
               )
