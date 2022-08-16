@@ -1,10 +1,6 @@
 import { server } from "../config/backend";
 
-export const createQueue = async (
-  guildId: string,
-  channelId: string,
-  token: string
-) => {
+export const createQueue = async (guildId: string, channelId: string, token: string) => {
   return server.post(
     `/player/${guildId}/queue`,
     {
@@ -16,4 +12,12 @@ export const createQueue = async (
       },
     }
   );
+};
+
+export const getQueue = async (guildId: string, token: string) => {
+  return server.get(`/player/${guildId}/queue`, {
+    headers: {
+      Authorization: token,
+    },
+  });
 };

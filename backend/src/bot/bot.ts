@@ -10,9 +10,13 @@ export const bot = new Client({
 });
 
 export const player = new Player(bot);
-player.on("botDisconnect", (queue) =>
-  SocketManager.sendToGuild(queue.guild.id, "bot-disconnect")
-);
+player.on("botDisconnect", (queue) => {
+  SocketManager.sendToGuild(queue.guild.id, "queue-destroyed");
+});
+
+player.on("channelEmpty", (queue) => {
+  SocketManager.sendToGuild(queue.guild.id, "queue-destroyed");
+});
 
 export const setup = async () => {
   bot.login(process.env.BOT_TOKEN!);

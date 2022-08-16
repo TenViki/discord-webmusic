@@ -7,16 +7,21 @@ import { refreshToken } from "./discordauth.service";
 
 export const getUserGuilds = async (auth: IAuth) => {
   await refreshToken(auth);
-  const response = await axios.get<UserGuilds[]>(
-    "https://discordapp.com/api/users/@me/guilds",
-    {
-      headers: {
-        Authorization: `Bearer ${auth.discordAccessToken}`,
-      },
-    }
-  );
+  console.log("WHY ARE YOU LIKE THIS");
+  try {
+    const response = await axios.get<UserGuilds[]>(
+      "https://discordapp.com/api/users/@me/guilds",
+      {
+        headers: {
+          Authorization: `Bearer ${auth.discordAccessToken}`,
+        },
+      }
+    );
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    return [];
+  }
 };
 
 export const getGuilds = async (

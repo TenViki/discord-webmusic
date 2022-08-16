@@ -12,8 +12,7 @@ router.post("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
 
   // Check if user has admin in guild
   try {
-    if (!(await userHasAdminInGuild(req.auth, req.params.guildId)))
-      return res.status(401).send({ error: "Not authorized" });
+    if (!(await userHasAdminInGuild(req.auth, req.params.guildId))) return res.status(401).send({ error: "Not authorized" });
 
     const { channelId } = req.body;
     const { guildId } = req.params;
@@ -38,7 +37,7 @@ router.get("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
     return res.status(400).send({ error: "Missing guildId" });
   }
   const queue = await player.getQueue(req.params.guildId);
-  if (!queue) return res.status(200).send({ queue: undefined });
+  if (!queue) return res.status(200).send({ queue: null });
 
   return res.status(200).send({ queue: queue.tracks });
 });

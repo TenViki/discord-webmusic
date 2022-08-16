@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router";
+import { getQueue } from "../api/player";
 import { getChannels } from "../api/servers";
 import Button from "../components/button/Button";
 import Channel from "../components/channel/Channel";
@@ -15,20 +16,39 @@ const Guild = () => {
   const guildId = useParams().guildId;
   const socket = useSocket();
 
+  useQuery(["queue", guildId], () => getQueue(guildId!, localStorage.getItem("token")!), {
+    onSuccess: (data) => setQueue(data?.data?.queue),
+    refetchOnWindowFocus: false,
+  });
+
+  const [queue, setQueue] = React.useState<null | string[]>(null);
+
+  const handleQueueCreated = () => {
+    setQueue([]);
+  };
+
+  const handleQueueDestroyed = () => {
+    setQueue(null);
+  };
+
   useEffect(() => {
     if (!socket) return;
     socket.emit("select-guild", guildId);
+
+    socket.on("queue-created", handleQueueCreated);
+    socket.on("queue-destroyed", handleQueueDestroyed);
+
+    return () => {
+      socket.off("queue-created", handleQueueCreated);
+      socket.off("queue-destroyed", handleQueueDestroyed);
+    };
   }, [guildId, socket]);
 
   const navigate = useNavigate();
 
-  const { data } = useQuery(
-    ["guild", guildId],
-    () => getChannels(localStorage.getItem("token")!, guildId!),
-    {
-      enabled: !!user,
-    }
-  );
+  const { data } = useQuery(["guild", guildId], () => getChannels(localStorage.getItem("token")!, guildId!), {
+    enabled: !!user,
+  });
 
   if (!user) return <div className="error-message">You aren't logged in!</div>;
   if (!data)
@@ -58,26 +78,20 @@ const Guild = () => {
       </div>
 
       <div className="guild-not-playing">
-        <div className="not-playing-header">
-          To create a queue, select channel:
-        </div>
+        <div className="not-playing-header">To create a queue, select channel:</div>
 
         <div className="channels">
           {data.data.channels
             .filter(
               (channel) =>
-                channel.type === DiscordChannelTypes.GUILD_VOICE ||
-                channel.type === DiscordChannelTypes.GUILD_STAGE_VOICE
+                channel.type === DiscordChannelTypes.GUILD_VOICE || channel.type === DiscordChannelTypes.GUILD_STAGE_VOICE
             )
             .map((channel) => (
-              <Channel
-                key={channel.id}
-                channel={channel}
-                guildId={data.data.guild.id}
-              />
+              <Channel key={channel.id} channel={channel} guildId={data.data.guild.id} />
             ))}
         </div>
       </div>
+      {queue ? "Pog queue created" : "Rip queue :("}
 
       {/* <div className="channels">
         {data.data.channels
