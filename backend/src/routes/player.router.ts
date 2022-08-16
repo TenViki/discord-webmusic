@@ -24,9 +24,9 @@ router.post("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
     const queue = await createQueue(guildId, channelId);
     queue.connect(channelId);
     SocketManager.sendToGuild(guildId, "queue-created");
-    res.status(200).send({ message: "Queue created" });
+    return res.status(200).send({ message: "Queue created" });
   } catch (error) {
-    res.status(500).send({ error: "Something went wrong" });
+    return res.status(500).send({ error: "Something went wrong" });
   }
 });
 

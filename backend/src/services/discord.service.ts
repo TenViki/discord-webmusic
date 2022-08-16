@@ -10,6 +10,7 @@ const userGuildsCache = new Map<string, UserGuilds[]>();
 export const getUserGuilds = async (auth: IAuth) => {
   await refreshToken(auth);
   const userGuilds = userGuildsCache.get(auth.userId);
+  console.log("REtrieving cache", userGuilds);
   if (userGuilds) return userGuilds;
 
   try {
@@ -20,10 +21,10 @@ export const getUserGuilds = async (auth: IAuth) => {
     });
 
     userGuildsCache.set(auth.userId, response.data);
+    console.log("Setting cache");
 
     return response.data;
   } catch (error: any) {
-    console.error(error);
     throw new Error(error);
   }
 };

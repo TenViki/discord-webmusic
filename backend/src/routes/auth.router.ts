@@ -13,7 +13,7 @@ authRouter.get("/", discordAuthMiddleware, async (req, res) => {
 
 authRouter.post("/", async (req, res) => {
   if (!req.body.code) {
-    res.status(400).send({ error: "Missing code" });
+    return res.status(400).send({ error: "Missing code" });
   }
 
   let data: DiscordUser & { token: string };

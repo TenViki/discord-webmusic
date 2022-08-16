@@ -48,6 +48,10 @@ const Router = () => {
       console.log("Socket authorized");
       setSocket(socket);
     });
+
+    return () => {
+      socket.disconnect();
+    };
   }, [user]);
 
   return (
@@ -57,10 +61,7 @@ const Router = () => {
 
         <main>
           <Routes>
-            <Route
-              path="/"
-              element={<Home backgroundUrl={backgroundimage} />}
-            />
+            <Route path="/" element={<Home backgroundUrl={backgroundimage} />} />
             <Route path="/auth/redirect" element={<Redirect />} />
             <Route path="/servers" element={<Servers />} />
             <Route path="/servers/:guildId" element={<Guild />} />

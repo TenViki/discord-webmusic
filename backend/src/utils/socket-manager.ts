@@ -18,20 +18,18 @@ export class SocketManager {
       const auth = SocketManager.socketClients.get(socket.id);
       if (!auth) return;
 
-      if (await userHasAdminInGuild(auth, guildId)) {
-        const oldGuild = SocketManager.socketGuilds.get(socket.id);
-        if (oldGuild) socket.leave(oldGuild);
-        socket.join(guildId);
-        SocketManager.socketGuilds.set(socket.id, guildId);
-      }
+      try {
+        if (await userHasAdminInGuild(auth, guildId)) {
+          const oldGuild = SocketManager.socketGuilds.get(socket.id);
+          if (oldGuild) socket.leave(oldGuild);
+          socket.join(guildId);
+          SocketManager.socketGuilds.set(socket.id, guildId);
+        }
+      } catch (error) {}
     });
   }
 
-  public static async registerEvent(
-    socket: Socket,
-    event: string,
-    callback: (...args: any[]) => void
-  ) {
+  public static async registerEvent(socket: Socket, event: string, callback: (...args: any[]) => void) {
     socket.on(event, async (...args) => {
       const auth = SocketManager.socketClients.get(socket.id);
       if (!auth) return;

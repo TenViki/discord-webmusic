@@ -31,8 +31,14 @@ const Guild = () => {
     setQueue(null);
   };
 
+  const navigate = useNavigate();
+
+  const { data } = useQuery(["guild", guildId], () => getChannels(localStorage.getItem("token")!, guildId!), {
+    enabled: !!user && !!socket,
+  });
+
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || !data?.data) return;
     socket.emit("select-guild", guildId);
 
     socket.on("queue-created", handleQueueCreated);
@@ -42,13 +48,7 @@ const Guild = () => {
       socket.off("queue-created", handleQueueCreated);
       socket.off("queue-destroyed", handleQueueDestroyed);
     };
-  }, [guildId, socket]);
-
-  const navigate = useNavigate();
-
-  const { data } = useQuery(["guild", guildId], () => getChannels(localStorage.getItem("token")!, guildId!), {
-    enabled: !!user,
-  });
+  }, [guildId, socket, data]);
 
   if (!user) return <div className="error-message">You aren't logged in!</div>;
   if (!data)
