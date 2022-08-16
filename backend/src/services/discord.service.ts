@@ -5,34 +5,34 @@ import { IAuth } from "../models/auth.model";
 import { UserGuilds } from "../types/discord";
 import { refreshToken } from "./discordauth.service";
 
+const userGuildsCache = new Map<string, UserGuilds[]>();
+
 export const getUserGuilds = async (auth: IAuth) => {
   await refreshToken(auth);
-  console.log("WHY ARE YOU LIKE THIS");
+  const userGuilds = userGuildsCache.get(auth.userId);
+  if (userGuilds) return userGuilds;
+
   try {
-    const response = await axios.get<UserGuilds[]>(
-      "https://discordapp.com/api/users/@me/guilds",
-      {
-        headers: {
-          Authorization: `Bearer ${auth.discordAccessToken}`,
-        },
-      }
-    );
+    const response = await axios.get<UserGuilds[]>("https://discordapp.com/api/users/@me/guilds", {
+      headers: {
+        Authorization: `Bearer ${auth.discordAccessToken}`,
+      },
+    });
+
+    userGuildsCache.set(auth.userId, response.data);
 
     return response.data;
-  } catch (error) {
-    return [];
+  } catch (error: any) {
+    console.error(error);
+    throw new Error(error);
   }
 };
 
-export const getGuilds = async (
-  auth: IAuth
-): Promise<(UserGuilds & { bot: boolean })[]> => {
+export const getGuilds = async (auth: IAuth): Promise<(UserGuilds & { bot: boolean })[]> => {
   const userGuilds = await getUserGuilds(auth);
 
   // Only guilds where user has administrator permissions
-  const userGuildsWithAdmin = userGuilds.filter(
-    (guild) => (guild.permissions & 0x8) === 0x8
-  );
+  const userGuildsWithAdmin = userGuilds.filter((guild) => (guild.permissions & 0x8) === 0x8);
 
   return userGuildsWithAdmin.map((guild) => ({
     ...guild,
@@ -43,8 +43,7 @@ export const getGuilds = async (
 const adminCache = new Map<string, boolean>();
 
 export const userHasAdminInGuild = async (auth: IAuth, guild: string) => {
-  if (adminCache.has(auth.userId + "-" + guild))
-    return adminCache.get(auth.userId + "-" + guild);
+  if (adminCache.has(auth.userId + "-" + guild)) return adminCache.get(auth.userId + "-" + guild);
 
   const userGuilds = await getGuilds(auth);
 
@@ -56,13 +55,10 @@ export const userHasAdminInGuild = async (auth: IAuth, guild: string) => {
 
 setInterval(() => {
   adminCache.clear();
+  userGuildsCache.clear();
 }, 1000 * 15);
 
-export const getChannelsInGuild = async (
-  auth: IAuth,
-  guildId: string,
-  userGuilds?: UserGuilds[]
-) => {
+export const getChannelsInGuild = async (auth: IAuth, guildId: string, userGuilds?: UserGuilds[]) => {
   if (!(await userHasAdminInGuild(auth, guildId))) return;
 
   const channels = bot.guilds.cache.get(guildId)!.channels.cache;
@@ -70,9 +66,7 @@ export const getChannelsInGuild = async (
   return {
     channels: channels.map((channel) => ({
       ...channel,
-      canSendMessages: channel
-        .permissionsFor(bot.user!)
-        ?.has(PermissionsBitField.Flags.SendMessages),
+      canSendMessages: channel.permissionsFor(bot.user!)?.has(PermissionsBitField.Flags.SendMessages),
     })),
     guild: bot.guilds.cache.get(guildId),
   };
