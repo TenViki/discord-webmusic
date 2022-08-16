@@ -14,8 +14,8 @@ const Home = () => {
     <div className="home">
       <div className="hero">
         <div className="hero-text">
-          <h1>BetterGithub</h1>
-          <p>Make your discord github webhooks great again!</p>
+          <h1>Zexel</h1>
+          <p>Take your music playing on discord to another level</p>
           {user ? (
             <Button
               text="Manage servers"
