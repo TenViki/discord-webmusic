@@ -6,6 +6,7 @@ import "express-async-errors";
 import { setupRoutes } from "./routes/router";
 import cors from "cors";
 import { setup } from "./bot/bot";
+import axios from "axios";
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ const main = async () => {
   // Use cors
   app.use(
     cors({
-      origin: ["http://localhost:3000"],
+      origin: ["http://localhost:5173"],
     })
   );
 
@@ -30,7 +31,11 @@ const main = async () => {
   setupRoutes(app);
 
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.error(err);
+    if (axios.isAxiosError(err)) {
+      console.log("HTTP ERROR: " + err.response?.status, err?.response?.data);
+    } else {
+      console.log(err);
+    }
     res.status(500).send("Something broke!");
   });
 

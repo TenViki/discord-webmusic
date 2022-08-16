@@ -1,4 +1,4 @@
-import { ColorResolvable, MessageEmbed } from "discord.js";
+import { ColorResolvable, EmbedBuilder } from "discord.js";
 import { GithubDelivery } from "../types/githubWebhooks";
 
 export const createEmbed = (
@@ -7,7 +7,7 @@ export const createEmbed = (
   color: ColorResolvable,
   author: GithubDelivery["sender"]
 ) => {
-  return new MessageEmbed()
+  return new EmbedBuilder()
     .setTitle(title)
     .setDescription(description)
     .setColor(color)

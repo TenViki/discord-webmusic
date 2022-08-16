@@ -6,6 +6,7 @@ import { DiscordUser } from "../types/auth";
 import { HydratedDocument } from "mongoose";
 
 export const getDiscordAuth = async (code: string) => {
+  console.log(process.env.DISCORD_REDIRECT_URI);
   const response = await axios.post<{
     access_token: string;
     refresh_token: string;

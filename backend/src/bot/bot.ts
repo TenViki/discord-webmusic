@@ -1,11 +1,11 @@
-import { Client, TextChannel } from "discord.js";
+import { Client, TextChannel, Partials } from "discord.js";
 import { GithubEvents } from "../types/githubWebhooks";
 import * as fs from "fs/promises";
 import { Webhook } from "../models/webhook.model";
 
 export const bot = new Client({
-  intents: ["GUILDS"],
-  partials: ["USER"],
+  intents: ["GuildMessages", "Guilds", "GuildVoiceStates"],
+  partials: [Partials.User, Partials.Message],
 });
 
 const events = new Map<keyof GithubEvents, any>();
