@@ -36,11 +36,23 @@ export const getGuilds = async (
   }));
 };
 
+const adminCache = new Map<string, boolean>();
+
 export const userHasAdminInGuild = async (auth: IAuth, guild: string) => {
+  if (adminCache.has(auth.userId + "-" + guild))
+    return adminCache.get(auth.userId + "-" + guild);
+
   const userGuilds = await getGuilds(auth);
+
+  const userGuild = userGuilds.some((g) => g.id === guild);
+  adminCache.set(auth.userId + "-" + guild, userGuild);
 
   return userGuilds.some((g) => g.id === guild);
 };
+
+setInterval(() => {
+  adminCache.clear();
+}, 1000 * 15);
 
 export const getChannelsInGuild = async (
   auth: IAuth,

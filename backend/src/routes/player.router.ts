@@ -10,7 +10,7 @@ router.post("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
 
   // Check if user has admin in guild
   try {
-    if (!userHasAdminInGuild(req.auth, req.params.guildId))
+    if (!(await userHasAdminInGuild(req.auth, req.params.guildId)))
       return res.status(401).send({ error: "Not authorized" });
 
     const { channelId } = req.body;
