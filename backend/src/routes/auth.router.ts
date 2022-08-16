@@ -6,8 +6,9 @@ import { DiscordUser } from "../types/auth";
 // Create router
 const authRouter = express.Router();
 
-authRouter.get("/", discordAuthMiddleware, (req, res) => {
-  res.send(req.user);
+authRouter.get("/", discordAuthMiddleware, async (req, res) => {
+  const user = await discordAuthService.getDiscordUser(req.auth!);
+  res.send(user);
 });
 
 authRouter.post("/", async (req, res) => {

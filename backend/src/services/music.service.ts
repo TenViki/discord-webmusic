@@ -10,6 +10,7 @@ export const createQueue = async (guildId: string, channelId: string) => {
   return player.createQueue(guildId, {
     metadata: {
       channelId: channelId,
+      guildId: guildId,
     },
   });
 };

@@ -12,10 +12,12 @@ router.get("/guilds", discordAuthMiddleware, async (req, res) => {
 
 router.get("/guilds/:guildId", discordAuthMiddleware, async (req, res) => {
   if (!req.auth) return res.status(401).send({ error: "Not authenticated" });
-  const guild = await discordService.getChannelsInGuild(
-    req.auth,
-    req.params.guildId
-  );
+  console.log("Eh?");
+  const guild = await discordService
+    .getChannelsInGuild(req.auth, req.params.guildId)
+    .catch((error) => {
+      return res.status(500).send({ error: error.message });
+    });
   res.send(guild);
 });
 

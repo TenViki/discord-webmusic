@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router";
@@ -6,13 +6,20 @@ import { getChannels } from "../api/servers";
 import Button from "../components/button/Button";
 import Channel from "../components/channel/Channel";
 import Loading from "../components/loading/Loading";
-import { UserContext } from "../Router";
+import { UserContext, useSocket } from "../Router";
 import { DiscordChannelTypes } from "../types/discord";
 import "./Guild.scss";
 
 const Guild = () => {
   const { user } = React.useContext(UserContext);
   const guildId = useParams().guildId;
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (!socket) return;
+    console.log("Emitting select");
+    socket.emit("select-guild", guildId);
+  }, [guildId, socket]);
 
   const navigate = useNavigate();
 

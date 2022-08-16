@@ -2,6 +2,7 @@ import { Client, TextChannel, Partials } from "discord.js";
 import { GithubEvents } from "../types/githubWebhooks";
 import * as fs from "fs/promises";
 import { Player } from "discord-player";
+import { SocketManager } from "../utils/socket-manager";
 
 export const bot = new Client({
   intents: ["GuildMessages", "Guilds", "GuildVoiceStates"],
@@ -9,8 +10,9 @@ export const bot = new Client({
 });
 
 export const player = new Player(bot);
-
-const events = new Map<keyof GithubEvents, any>();
+player.on("botDisconnect", (queue) =>
+  SocketManager.sendToGuild(queue.guild.id, "bot-disconnect")
+);
 
 export const setup = async () => {
   bot.login(process.env.BOT_TOKEN!);

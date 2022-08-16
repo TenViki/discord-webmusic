@@ -8,7 +8,6 @@ import { IAuth, Auth } from "../models/auth.model";
 declare global {
   namespace Express {
     interface Request {
-      user?: DiscordUser;
       auth?: IAuth;
     }
   }
@@ -29,10 +28,7 @@ export const validateToken = async (token: string) => {
   const auth = await Auth.findOne({ _id: sessionId });
   if (!auth) return null;
 
-  const user = await discordAuthService.getDiscordUser(auth);
-  if (!user) return null;
-
-  return user;
+  return auth;
 };
 
 export const discordAuthMiddleware = async (
@@ -55,6 +51,8 @@ export const discordAuthMiddleware = async (
     return res.status(401).send({ error: "Invalid token" });
   }
 
+  console.log("Wha??");
+
   const auth = await Auth.findOne({
     _id: sessionId,
   });
@@ -63,10 +61,6 @@ export const discordAuthMiddleware = async (
     return res.status(401).send({ error: "Invalid token" });
   }
 
-  const user = await discordAuthService.getDiscordUser(auth);
-  if (user) {
-    req.user = user;
-    req.auth = auth;
-  }
+  req.auth = auth;
   next();
 };

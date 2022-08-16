@@ -39,6 +39,7 @@ export const getGuilds = async (
 const adminCache = new Map<string, boolean>();
 
 export const userHasAdminInGuild = async (auth: IAuth, guild: string) => {
+  console.log(adminCache.has(auth.userId + "-" + guild));
   if (adminCache.has(auth.userId + "-" + guild))
     return adminCache.get(auth.userId + "-" + guild);
 
@@ -59,16 +60,7 @@ export const getChannelsInGuild = async (
   guildId: string,
   userGuilds?: UserGuilds[]
 ) => {
-  if (!userGuilds) userGuilds = await getUserGuilds(auth);
-  const adminUserGuilds = userGuilds.filter(
-    (guild) => (guild.permissions & 0x8) === 0x8
-  );
-
-  if (!adminUserGuilds.find((guild) => guild.id === guildId)) {
-    throw new Error(
-      "User does not have administrator permissions in this guild"
-    );
-  }
+  if (!(await userHasAdminInGuild(auth, guildId))) return;
 
   const channels = bot.guilds.cache.get(guildId)!.channels.cache;
 
@@ -79,6 +71,6 @@ export const getChannelsInGuild = async (
         .permissionsFor(bot.user!)
         ?.has(PermissionsBitField.Flags.SendMessages),
     })),
-    guild: adminUserGuilds.find((guild) => guild.id === guildId)!,
+    guild: bot.guilds.cache.get(guildId),
   };
 };

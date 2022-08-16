@@ -23,6 +23,10 @@ export const UserContext = React.createContext<{
 
 export const SocketContext = React.createContext<Socket | null>(null);
 
+export const useSocket = () => {
+  return React.useContext(SocketContext);
+};
+
 const Router = () => {
   const [user, setUser] = React.useState<DiscordUser | null>(null);
   const [socket, setSocket] = React.useState<Socket | null>(null);
@@ -42,6 +46,7 @@ const Router = () => {
     });
     socket.on("auth-success", () => {
       console.log("Socket authorized");
+      setSocket(socket);
     });
   }, [user]);
 
