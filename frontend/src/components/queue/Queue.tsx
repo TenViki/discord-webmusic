@@ -2,6 +2,7 @@ import React from "react";
 import { FiSearch, FiX } from "react-icons/fi";
 import { searchTracks } from "../../api/player";
 import { Track } from "../../types/player";
+import Loading from "../loading/Loading";
 import "./Queue.scss";
 
 interface QueueProps {
@@ -13,10 +14,13 @@ const Queue: React.FC<QueueProps> = () => {
   const [search, setSearch] = React.useState("");
   const [tracks, setTracks] = React.useState<Track[]>([]);
   const [searchOpened, setSearchOpened] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     const tracks = await searchTracks(search, localStorage.getItem("token")!);
+    setLoading(false);
     console.log(tracks);
     setTracks(tracks.data.tracks);
   };
@@ -36,9 +40,7 @@ const Queue: React.FC<QueueProps> = () => {
           onFocus={() => setSearchOpened(true)}
           onBlur={() => !tracks.length && setSearchOpened(false)}
         />
-        <button type="submit">
-          <FiSearch />
-        </button>
+        <button type="submit">{loading ? <Loading size="small" /> : <FiSearch size={20} />}</button>
       </form>
 
       <div className="queue-container">
