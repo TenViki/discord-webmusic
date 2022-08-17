@@ -24,7 +24,7 @@ const Home: React.FC<HomeProps> = ({ backgroundUrl }) => {
         }}
       >
         <div className="hero-text">
-          <h1>Zexel</h1>
+          <h1>Zaxel</h1>
           <p>Take your music playing on discord to another level</p>
           {user ? (
             <Button
