@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Track } from "../../types/player";
 
 interface TrackSearchProps {
@@ -8,6 +8,10 @@ interface TrackSearchProps {
 
 const TrackSearch: React.FC<TrackSearchProps> = ({ track, onClick }) => {
   const [image, setImage] = React.useState<string>(track.thumbnail);
+
+  useEffect(() => {
+    setImage(track.thumbnail);
+  }, [track]);
 
   return (
     <div className="track-search" key={track.id} onClick={() => onClick(track)}>
