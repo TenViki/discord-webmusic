@@ -1,6 +1,6 @@
 import React from "react";
 import { FiSearch, FiX } from "react-icons/fi";
-import { searchTracks } from "../../api/player";
+import { addTrack, searchTracks } from "../../api/player";
 import { Track } from "../../types/player";
 import Loading from "../loading/Loading";
 import TrackSearch from "../track/TrackSearch";
@@ -9,9 +9,10 @@ import "./Queue.scss";
 interface QueueProps {
   queue: Track[] | null;
   setQueue: React.Dispatch<React.SetStateAction<Track[] | null>>;
+  guildId: string;
 }
 
-const Queue: React.FC<QueueProps> = () => {
+const Queue: React.FC<QueueProps> = ({ guildId }) => {
   const [search, setSearch] = React.useState("");
   const [tracks, setTracks] = React.useState<Track[]>([]);
   const [searchOpened, setSearchOpened] = React.useState(false);
@@ -26,8 +27,9 @@ const Queue: React.FC<QueueProps> = () => {
     setTracks(tracks.data.tracks);
   };
 
-  const handleTrackSelect = (track: Track) => {
+  const handleTrackSelect = async (track: Track) => {
     setTimeout(() => setSearchOpened(false), 200);
+    await addTrack(guildId, track, localStorage.getItem("token")!);
   };
 
   return (

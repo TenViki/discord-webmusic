@@ -35,3 +35,17 @@ export const searchTracks = async (query: string, token: string) => {
     },
   });
 };
+
+export const addTrack = async (guildId: string, track: Track, token: string) => {
+  return server.put(
+    `/player/${guildId}/queue`,
+    {
+      track: track,
+    },
+    {
+      headers: {
+        Authorization: token,
+      },
+    }
+  );
+};

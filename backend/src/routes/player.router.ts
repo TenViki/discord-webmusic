@@ -1,3 +1,4 @@
+import { Track } from "discord-player";
 import { Router } from "express";
 import { player } from "../bot/bot";
 import { discordAuthMiddleware } from "../middleware/discord-auth";
@@ -51,7 +52,40 @@ router.get("/search/", discordAuthMiddleware, async (req, res) => {
     return res.status(400).send({ error: "Missing query" });
   }
   const tracks = await player.search(query + "", { requestedBy: req.auth.userId });
+  console.log(tracks);
   return res.status(200).send(tracks);
+});
+
+router.put("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
+  if (!req.auth) return res.status(401).send({ error: "Not authenticated" });
+
+  // Check if user has admin in guild
+  try {
+    if (!(await userHasAdminInGuild(req.auth, req.params.guildId))) return res.status(401).send({ error: "Not authorized" });
+
+    const { track } = req.body as { track: Track };
+    const { guildId } = req.params;
+
+    if (!guildId || !track) {
+      return res.status(400).send({ error: "Missing guildId or track" });
+    }
+
+    const queue = await player.getQueue(guildId);
+    if (!queue) return res.status(404).send({ error: "Queue not created" });
+
+    const trackData = await player.search(track.url, { requestedBy: req.auth.userId }).then((x) => x.tracks[0]);
+
+    console.log("Trackdata:", trackData, track);
+    queue.addTrack(trackData);
+    queue.play();
+
+    console.log("added", track, "to", guildId);
+
+    SocketManager.sendToGuild(guildId, "queue-updated", { tracks: queue.tracks });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ error: "Something went wrong" });
+  }
 });
 
 export default router;

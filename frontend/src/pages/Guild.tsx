@@ -93,7 +93,7 @@ const Guild = () => {
             ))}
         </div>
       </div>
-      {queue ? <Queue queue={queue} setQueue={setQueue} /> : "Rip queue :("}
+      {queue ? <Queue queue={queue} setQueue={setQueue} guildId={guildId!} /> : "Rip queue :("}
 
       {/* <div className="channels">
         {data.data.channels

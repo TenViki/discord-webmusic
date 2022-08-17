@@ -18,6 +18,14 @@ player.on("channelEmpty", (queue) => {
   SocketManager.sendToGuild(queue.guild.id, "queue-destroyed");
 });
 
+player.on("queueEnd", (queue) => {
+  SocketManager.sendToGuild(queue.guild.id, "queue-destroyed");
+});
+
+player.on("trackAdd", (queue) => {
+  SocketManager.sendToGuild(queue.guild.id, "queue-updated", queue.tracks);
+});
+
 export const setup = async () => {
   bot.login(process.env.BOT_TOKEN!);
 };
