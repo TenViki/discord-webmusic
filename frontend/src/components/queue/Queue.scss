@@ -1,0 +1,177 @@
+@import "../../config/theme.scss";
+
+.track-search {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: .2s;
+
+  &:active {
+    transform: scale(.95);
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  &-image {
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    margin-right: 1rem;
+    border-radius: .3rem;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &-text {
+    overflow: hidden;
+    margin-right: 1rem;
+    flex-grow: 1;
+  }
+
+  &-name, &-artist {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+  }
+
+  &-artist, &-time {
+    color: #999;
+  }
+}
+
+.queue {
+  width: min(40rem, 100%);
+  border: 1px solid #333;
+  margin-top: 1rem;
+  border-radius: .5rem;
+  padding: .5rem;
+  height: 40rem;
+  transition: .2s;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .search-form {
+    display: flex;
+    margin-bottom: 1rem;
+
+    input {
+      padding: .5rem 1rem;
+      border-radius: .3rem;
+      outline: 0;
+      border: 0;
+      flex: 1;
+      font-size: 1rem;
+      background-color: #333;
+      color: #fff;
+    }
+
+    button {
+      padding: .5rem;
+      border-radius: .3rem;
+      outline: 0;
+      border: 0;
+      background-color: #333;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      opacity: 0;
+      width: 0;
+      padding: .5rem 0;
+      transition: .2s;
+      height: 3rem;
+    }
+
+    input:focus + button{
+      padding: .5rem;
+      margin-left: 1rem;
+      width: 3rem;
+      opacity: 1;
+
+    }
+  }
+
+  &.search-opened {
+    .search {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+.queue-container {
+  position: relative;
+  flex-grow: 1;
+}
+
+.search {
+  padding: 1rem;
+  transform: translateY(50%);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  transition: .4s;
+  top: 0;
+  background-color: #222;
+  border-radius: .3rem;
+  opacity: 0;
+  visibility: hidden;
+  overflow: auto;
+
+  &-x {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 2.6rem;
+    color: #666;
+    padding: .5rem;
+    cursor: pointer;
+    transition: .2s;
+
+    &:hover {
+      color: $danger;
+    }
+  }
+
+  .no-search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    color: #999;
+    font-size: 1.5rem;
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 1rem .3rem;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

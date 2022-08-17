@@ -7,8 +7,10 @@ import { getChannels } from "../api/servers";
 import Button from "../components/button/Button";
 import Channel from "../components/channel/Channel";
 import Loading from "../components/loading/Loading";
+import Queue from "../components/queue/Queue";
 import { UserContext, useSocket } from "../Router";
 import { DiscordChannelTypes } from "../types/discord";
+import { Track } from "../types/player";
 import "./Guild.scss";
 
 const Guild = () => {
@@ -21,7 +23,7 @@ const Guild = () => {
     refetchOnWindowFocus: false,
   });
 
-  const [queue, setQueue] = React.useState<null | string[]>(null);
+  const [queue, setQueue] = React.useState<null | Track[]>(null);
 
   const handleQueueCreated = () => {
     setQueue([]);
@@ -91,7 +93,7 @@ const Guild = () => {
             ))}
         </div>
       </div>
-      {queue ? "Pog queue created" : "Rip queue :("}
+      {queue ? <Queue queue={queue} setQueue={setQueue} /> : "Rip queue :("}
 
       {/* <div className="channels">
         {data.data.channels

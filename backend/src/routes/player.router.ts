@@ -42,4 +42,16 @@ router.get("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
   return res.status(200).send({ queue: queue.tracks });
 });
 
+router.get("/search/", discordAuthMiddleware, async (req, res) => {
+  if (!req.auth) return res.status(401).send({ error: "Not authenticated" });
+
+  const query = req.query.query;
+
+  if (!query) {
+    return res.status(400).send({ error: "Missing query" });
+  }
+  const tracks = await player.search(query + "", { requestedBy: req.auth.userId });
+  return res.status(200).send(tracks);
+});
+
 export default router;
