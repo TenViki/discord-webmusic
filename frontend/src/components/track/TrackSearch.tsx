@@ -16,7 +16,7 @@ const TrackSearch: React.FC<TrackSearchProps> = ({ track, onClick }) => {
   return (
     <div className="track-search" key={track.id} onClick={() => onClick(track)}>
       <div className="track-search-image">
-        <img src={image.replace("maxresdefault", "default")} alt={track.title} onError={() => setImage("/Freddie Z II.png")} />
+        <img src={image.replace("maxresdefault", "default")} alt={track.title} onError={() => setImage("/Logo_error.png")} />
       </div>
       <div className="track-search-text">
         <div className="track-search-name">{track.title}</div>
