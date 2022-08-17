@@ -3,6 +3,7 @@ import { FiSearch, FiX } from "react-icons/fi";
 import { searchTracks } from "../../api/player";
 import { Track } from "../../types/player";
 import Loading from "../loading/Loading";
+import TrackSearch from "../track/TrackSearch";
 import "./Queue.scss";
 
 interface QueueProps {
@@ -49,24 +50,7 @@ const Queue: React.FC<QueueProps> = () => {
         <div className="search">
           <FiX onClick={() => setSearchOpened(false)} className="search-x" />
           {tracks.length ? (
-            tracks.map((track) => (
-              <div className="track-search" key={track.id} onClick={() => handleTrackSelect(track)}>
-                <div className="track-search-image">
-                  <img
-                    src={track.thumbnail.replace("maxresdefault", "default")}
-                    alt={track.title}
-                    onError={() => {
-                      track.thumbnail = "/Freddie Z II.png";
-                    }}
-                  />
-                </div>
-                <div className="track-search-text">
-                  <div className="track-search-name">{track.title}</div>
-                  <div className="track-search-artist">{track.author}</div>
-                </div>
-                <div className="track-search-time">{track.duration}</div>
-              </div>
-            ))
+            tracks.map((track) => <TrackSearch track={track} onClick={handleTrackSelect} />)
           ) : (
             <div className="no-search">Starts search</div>
           )}
