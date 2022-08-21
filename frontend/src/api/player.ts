@@ -49,3 +49,19 @@ export const addTrack = async (guildId: string, track: Track, token: string) => 
     }
   );
 };
+
+export const setState = async (guildId: string, paused: boolean, repeat: number, volume: number, token: string) => {
+  return server.put(
+    `/player/${guildId}/state`,
+    {
+      paused: paused,
+      repeatMode: repeat,
+      volume: volume,
+    },
+    {
+      headers: {
+        Authorization: token,
+      },
+    }
+  );
+};

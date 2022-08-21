@@ -58,7 +58,15 @@ router.get("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
 
   console.log("Get   :", queue.metadata?.channelId);
 
-  return res.status(200).send({ queue: queue.tracks, current: queue.current, channel: queue?.metadata?.channelId });
+  return res.status(200).send({
+    queue: queue.tracks,
+    current: queue.current,
+    channel: queue?.metadata?.channelId,
+    paused: !queue.playing,
+    repeat: queue.repeatMode,
+    volume: queue.volume,
+    currentProgress: queue.getPlayerTimestamp(),
+  });
 });
 
 router.get("/search/", discordAuthMiddleware, async (req, res) => {
@@ -113,10 +121,10 @@ router.put("/:guildId/state", discordAuthMiddleware, async (req, res) => {
   try {
     if (!(await userHasAdminInGuild(req.auth, req.params.guildId))) return res.status(401).send({ error: "Not authorized" });
 
-    const { paused, repeatMode } = req.body as { paused: boolean; repeatMode: QueueRepeatMode };
+    const { paused, repeatMode, volume } = req.body as { paused: boolean; repeatMode: QueueRepeatMode; volume: number };
 
-    if (!req.params.guildId || !paused) {
-      return res.status(400).send({ error: "Missing guildId or paused" });
+    if (!req.params.guildId) {
+      return res.status(400).send({ error: "Missing guildId" });
     }
 
     const queue = await player.getQueue(req.params.guildId);
@@ -124,8 +132,9 @@ router.put("/:guildId/state", discordAuthMiddleware, async (req, res) => {
 
     queue.setPaused(paused);
     queue.setRepeatMode(repeatMode);
+    queue.setVolume(volume);
 
-    SocketManager.sendToGuild(req.params.guildId, "state-updated", { paused: paused, repeatMode: repeatMode });
+    SocketManager.sendToGuild(req.params.guildId, "state-updated", { paused: paused, repeatMode: repeatMode, volume: volume });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ error: "Something went wrong" });

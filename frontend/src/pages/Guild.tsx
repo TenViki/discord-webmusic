@@ -23,11 +23,25 @@ const Guild = () => {
   const [queue, setQueue] = React.useState<null | Track[]>(null);
   const [currentTrack, setCurrentTrack] = React.useState<null | Track>(null);
 
+  const [paused, setPaused] = React.useState(false);
+  const [repeat, setRepeat] = React.useState(0);
+  const [volume, setVolume] = React.useState(1);
+  const [progress, setProgress] = React.useState<null | {
+    current: string;
+    total: string;
+    progress: number;
+  }>();
+
   useQuery(["queue", guildId], () => getQueue(guildId!, localStorage.getItem("token")!), {
     onSuccess: (data) => {
       setQueue(data?.data?.queue);
       setCurrentChannel(data?.data?.channel);
       setCurrentTrack(data?.data?.current);
+      setPaused(data?.data?.paused);
+      setRepeat(data?.data?.repeat);
+      setVolume(data?.data?.volume);
+
+      setProgress(data?.data?.currentProgress);
     },
     refetchOnWindowFocus: false,
   });
@@ -114,7 +128,18 @@ const Guild = () => {
         <div className="create-queue">Create a queue by selecting a channel</div>
       )}
 
-      {currentTrack && <Controls current={currentTrack} />}
+      {currentTrack && (
+        <Controls
+          paused={paused}
+          repeat={repeat}
+          setPaused={setPaused}
+          setRepeat={setRepeat}
+          guildId={guildId!}
+          current={currentTrack}
+          volume={volume}
+          setVolume={setVolume}
+        />
+      )}
     </div>
   );
 };

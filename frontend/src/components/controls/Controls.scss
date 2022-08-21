@@ -4,6 +4,16 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
 
+  .button-group {
+    display: flex;
+
+    button {
+      &:not(:last-child) {
+        margin-right: 1rem;
+      }
+    }
+  }
+
   .controls-song {
     display: flex;
     align-items: center;

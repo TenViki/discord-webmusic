@@ -32,6 +32,11 @@ player.on("trackAdd", (queue) => {
 player.on("trackStart", (queue) => {
   SocketManager.sendToGuild(queue.guild.id, "queue-update", queue.tracks);
   SocketManager.sendToGuild(queue.guild.id, "track-start", queue.current);
+  SocketManager.sendToGuild(queue.guild.id, "state-updated", {
+    paused: false,
+    volume: queue.volume,
+    repeatMode: queue.repeatMode,
+  });
 });
 
 export const setup = async () => {
