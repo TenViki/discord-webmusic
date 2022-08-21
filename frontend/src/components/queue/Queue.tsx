@@ -12,27 +12,19 @@ interface QueueProps {
   current: TrackType | null;
 }
 
-const Queue: React.FC<QueueProps> = ({ guildId, queue: queueOriginal, current: currentOriginal }) => {
+const Queue: React.FC<QueueProps> = ({ guildId, queue: queueOriginal, current }) => {
   const socket = React.useContext(SocketContext);
   const [queue, setQueue] = React.useState<TrackType[] | null>(queueOriginal);
-  const [current, setCurrent] = React.useState<TrackType | null>(currentOriginal);
 
   const handleQueueUpdate = (queue: TrackType[]) => {
     setQueue(queue);
   };
-
-  const handleTrackStart = (track: TrackType) => {
-    setCurrent(track);
-  };
-
   React.useEffect(() => {
     if (!socket) return;
     socket.on("queue-update", handleQueueUpdate);
-    socket.on("track-start", handleTrackStart);
 
     return () => {
       socket.off("queue-update", handleQueueUpdate);
-      socket.off("track-start", handleTrackStart);
     };
   }, [socket]);
 
