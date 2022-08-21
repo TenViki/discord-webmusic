@@ -1,4 +1,4 @@
-import { QueryType, Track } from "discord-player";
+import { QueryType, QueueRepeatMode, Track } from "discord-player";
 import { Router } from "express";
 import { player } from "../bot/bot";
 import { discordAuthMiddleware } from "../middleware/discord-auth";
@@ -100,6 +100,32 @@ router.put("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
     console.log("added", track, "to", guildId);
 
     SocketManager.sendToGuild(guildId, "queue-updated", { tracks: queue.tracks });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ error: "Something went wrong" });
+  }
+});
+
+router.put("/:guildId/state", discordAuthMiddleware, async (req, res) => {
+  if (!req.auth) return res.status(401).send({ error: "Not authenticated" });
+
+  // Check if user has admin in guild
+  try {
+    if (!(await userHasAdminInGuild(req.auth, req.params.guildId))) return res.status(401).send({ error: "Not authorized" });
+
+    const { paused, repeatMode } = req.body as { paused: boolean; repeatMode: QueueRepeatMode };
+
+    if (!req.params.guildId || !paused) {
+      return res.status(400).send({ error: "Missing guildId or paused" });
+    }
+
+    const queue = await player.getQueue(req.params.guildId);
+    if (!queue) return res.status(404).send({ error: "Queue not created" });
+
+    queue.setPaused(paused);
+    queue.setRepeatMode(repeatMode);
+
+    SocketManager.sendToGuild(req.params.guildId, "state-updated", { paused: paused, repeatMode: repeatMode });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ error: "Something went wrong" });

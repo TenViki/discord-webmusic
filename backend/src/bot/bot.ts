@@ -11,7 +11,7 @@ export const bot = new Client({
 
 export const player = new Player(bot);
 player.on("botDisconnect", (queue) => {
-  SocketManager.sendToGuild(queue.guild.id, "queue-destroyed");
+  SocketManager.sendToGuild(queue.guild.id, " ");
   SocketManager.sendToGuild(queue.guild.id, "channel-update", null);
 });
 
