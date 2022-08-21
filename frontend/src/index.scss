@@ -18,8 +18,20 @@ h1 {
 
 html,
 body,
+#root,
 .app {
   height: 100%;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .error-message {
@@ -43,10 +55,12 @@ body,
 
 .page {
   margin: 1rem;
+  flex-grow: 1;
 
   &-header {
     display: flex;
     align-items: center;
+    margin-bottom: 1rem;
 
     .icon-back {
       display: flex;

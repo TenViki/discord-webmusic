@@ -10,14 +10,34 @@
   border-radius: 0.5rem;
 }
 
+.page-sidepanel {
+  padding: 1rem;
+  background-color: #181818;
+  border-radius: 0.5rem;
+  margin-right: 1rem;
+
+  .page-header {
+    padding-right: 3rem;
+  }
+}
+
 .guild-not-playing {
   padding: 1rem;
-  margin-top: 1rem;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   border: 1px solid #333;
   width: min(100%, 40rem);
 }
 
-.not-playing-header{
+.not-playing-header {
   margin-bottom: 1rem;
+}
+
+.guild-control {
+  display: grid;
+  grid-template-areas: "sidebar queue" "control control";
+  grid-template-columns: auto 3fr;
+  grid-template-rows: 1fr auto;
+  margin-top: 0;
+  overflow: hidden;
+  max-height: calc(100vh - 6.5rem);
 }

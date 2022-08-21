@@ -61,28 +61,26 @@ const Guild = () => {
     );
 
   return (
-    <div className="page">
-      <div className="page-header">
-        <div className="icon-back" onClick={() => navigate("/servers")}>
-          <FiArrowLeft />
+    <div className="page guild-control">
+      <div className="page-sidepanel">
+        <div className="page-header">
+          <div className="icon-back" onClick={() => navigate("/servers")}>
+            <FiArrowLeft />
+          </div>
+
+          {data.data.guild.icon ? (
+            <img
+              src={`https://cdn.discordapp.com/icons/${data.data.guild.id}/${data.data.guild.icon}.png`}
+              alt="Server icon"
+              className="server-icon-header"
+            />
+          ) : (
+            <div className="server-icon-letter">{data.data.guild.name[0]}</div>
+          )}
+          <h1>{data.data.guild.name}</h1>
         </div>
 
-        {data.data.guild.icon ? (
-          <img
-            src={`https://cdn.discordapp.com/icons/${data.data.guild.id}/${data.data.guild.icon}.png`}
-            alt="Server icon"
-            className="server-icon-header"
-          />
-        ) : (
-          <div className="server-icon-letter">{data.data.guild.name[0]}</div>
-        )}
-        <h1>{data.data.guild.name}</h1>
-      </div>
-
-      <div className="guild-not-playing">
-        <div className="not-playing-header">To create a queue, select channel:</div>
-
-        <div className="channels">
+        <div className="guild-channels">
           {data.data.channels
             .filter(
               (channel) =>
@@ -93,25 +91,10 @@ const Guild = () => {
             ))}
         </div>
       </div>
+
       {queue ? <Queue queue={queue} setQueue={setQueue} guildId={guildId!} /> : "Rip queue :("}
 
-      {/* <div className="channels">
-        {data.data.channels
-          .filter(
-            (channel) =>
-              channel.type === DiscordChannelTypes.GUILD_VOICE ||
-              channel.type === DiscordChannelTypes.GUILD_STAGE_VOICE
-          )
-          .map((channel) => (
-            <Channel
-              key={channel.id}
-              channel={channel}
-              selectedChannel={selectedChannel}
-              onSelect={() => setSelectedChannel(channel.id)}
-              guildId={data.data.guild.id}
-            />
-          ))}
-      </div> */}
+      <div className="guild-controls">CONTROLS</div>
     </div>
   );
 };

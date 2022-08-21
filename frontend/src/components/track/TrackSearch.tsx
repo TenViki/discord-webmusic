@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Track } from "../../types/player";
+import "./TrackSearch.scss";
 
 interface TrackSearchProps {
   track: Track;

@@ -1,10 +1,8 @@
 import React from "react";
-import { FiSearch, FiX } from "react-icons/fi";
-import { addTrack, searchTracks } from "../../api/player";
+import { SocketContext } from "../../Router";
 import { Track } from "../../types/player";
-import Loading from "../loading/Loading";
-import TrackSearch from "../track/TrackSearch";
 import "./Queue.scss";
+import QueueSearch from "./QueueSearch";
 
 interface QueueProps {
   queue: Track[] | null;
@@ -13,50 +11,25 @@ interface QueueProps {
 }
 
 const Queue: React.FC<QueueProps> = ({ guildId }) => {
-  const [search, setSearch] = React.useState("");
-  const [tracks, setTracks] = React.useState<Track[]>([]);
-  const [searchOpened, setSearchOpened] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const socket = React.useContext(SocketContext);
+  const [queue, setQueue] = React.useState<Track[] | null>(null);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    const tracks = await searchTracks(search, localStorage.getItem("token")!);
-    setLoading(false);
-    console.log(tracks);
-    setTracks(tracks.data.tracks);
+  const handleQueueUpdate = (queue: Track[]) => {
+    setQueue(queue);
   };
 
-  const handleTrackSelect = async (track: Track) => {
-    setTimeout(() => setSearchOpened(false), 200);
-    await addTrack(guildId, track, localStorage.getItem("token")!);
-  };
+  React.useEffect(() => {}, [socket]);
 
   return (
-    <div className={`queue ${searchOpened ? "search-opened" : ""}`}>
-      <form onSubmit={handleSearch} className="search-form">
-        <input
-          placeholder="Search..."
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          onFocus={() => setSearchOpened(true)}
-          onBlur={() => !tracks.length && setSearchOpened(false)}
-        />
-        <button type="submit">{loading ? <Loading size="small" /> : <FiSearch size={20} />}</button>
-      </form>
+    <div className={`guild-queue`}>
+      <QueueSearch guildId={guildId} />
 
-      <div className="queue-container">
-        <div className="queue-tracks">Queue</div>
-
-        <div className="search">
-          <FiX onClick={() => setSearchOpened(false)} className="search-x" />
-          {tracks.length ? (
-            tracks.map((track) => <TrackSearch track={track} onClick={handleTrackSelect} />)
-          ) : (
-            <div className="no-search">Starts search</div>
-          )}
-        </div>
+      <div className="guild-queue-tracks">
+        {queue?.length ? (
+          queue.map((track) => <>{track.title}, </>)
+        ) : (
+          <div className="no-queue">To create a queue, add something by searching</div>
+        )}
       </div>
     </div>
   );
