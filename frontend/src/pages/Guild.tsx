@@ -38,6 +38,7 @@ const Guild = () => {
 
   const handleQueueDestroyed = () => {
     setQueue(null);
+    setCurrentTrack(null);
   };
 
   const handleCurrentTrack = (track: Track) => {
@@ -107,7 +108,11 @@ const Guild = () => {
         </div>
       </div>
 
-      {queue ? <Queue queue={queue} setQueue={setQueue} guildId={guildId!} current={currentTrack} /> : "Rip queue :("}
+      {queue ? (
+        <Queue queue={queue} setQueue={setQueue} guildId={guildId!} current={currentTrack} />
+      ) : (
+        <div className="create-queue">Create a queue by selecting a channel</div>
+      )}
 
       {currentTrack && <Controls current={currentTrack} />}
     </div>

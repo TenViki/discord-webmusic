@@ -41,3 +41,12 @@
   overflow: hidden;
   max-height: calc(100vh - 6.5rem);
 }
+
+.create-queue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: 100;
+  color: #999;
+}
