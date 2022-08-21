@@ -47,7 +47,7 @@ const QueueSearch: React.FC<QueueSearchProps> = ({ guildId }) => {
 
       <div className="queue-search-tracks">
         {tracks.length ? (
-          tracks.map((track) => <TrackSearch track={track} onClick={handleTrackSelect} />)
+          tracks.map((track, i) => <TrackSearch track={track} onClick={handleTrackSelect} key={i} />)
         ) : (
           <div className="no-search">Start search</div>
         )}

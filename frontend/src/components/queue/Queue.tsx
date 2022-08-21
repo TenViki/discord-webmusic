@@ -1,25 +1,27 @@
 import React from "react";
 import { SocketContext } from "../../Router";
-import { Track } from "../../types/player";
+import { Track as TrackType } from "../../types/player";
+import Track from "../track/Track";
 import "./Queue.scss";
 import QueueSearch from "./QueueSearch";
 
 interface QueueProps {
-  queue: Track[] | null;
-  setQueue: React.Dispatch<React.SetStateAction<Track[] | null>>;
+  queue: TrackType[] | null;
+  setQueue: React.Dispatch<React.SetStateAction<TrackType[] | null>>;
   guildId: string;
+  current: TrackType | null;
 }
 
-const Queue: React.FC<QueueProps> = ({ guildId, queue: queueOriginal }) => {
+const Queue: React.FC<QueueProps> = ({ guildId, queue: queueOriginal, current: currentOriginal }) => {
   const socket = React.useContext(SocketContext);
-  const [queue, setQueue] = React.useState<Track[] | null>(queueOriginal);
-  const [current, setCurrent] = React.useState<Track | null>(null);
+  const [queue, setQueue] = React.useState<TrackType[] | null>(queueOriginal);
+  const [current, setCurrent] = React.useState<TrackType | null>(currentOriginal);
 
-  const handleQueueUpdate = (queue: Track[]) => {
+  const handleQueueUpdate = (queue: TrackType[]) => {
     setQueue(queue);
   };
 
-  const handleTrackStart = (track: Track) => {
+  const handleTrackStart = (track: TrackType) => {
     setCurrent(track);
   };
 
@@ -39,14 +41,9 @@ const Queue: React.FC<QueueProps> = ({ guildId, queue: queueOriginal }) => {
       <QueueSearch guildId={guildId} />
 
       <div className="guild-queue-tracks">
-        Current: {current?.title}
+        {current && <Track track={current} playindex={0} playing={true} />}
         {queue?.length ? (
-          queue.map((track) => (
-            <div>
-              {track.title}
-              <br />
-            </div>
-          ))
+          queue.map((track, i) => <Track track={track} playindex={i} playing={false} key={i} />)
         ) : (
           <div className="no-queue">To create a queue, add something by searching</div>
         )}

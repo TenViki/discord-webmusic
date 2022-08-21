@@ -19,16 +19,17 @@ const Guild = () => {
   const socket = useSocket();
 
   const [currentCahnnel, setCurrentChannel] = React.useState<null | string>(null);
+  const [queue, setQueue] = React.useState<null | Track[]>(null);
+  const [currentTrack, setCurrentTrack] = React.useState<null | Track>(null);
 
   useQuery(["queue", guildId], () => getQueue(guildId!, localStorage.getItem("token")!), {
     onSuccess: (data) => {
       setQueue(data?.data?.queue);
       setCurrentChannel(data?.data?.channel);
+      setCurrentTrack(data?.data?.current);
     },
     refetchOnWindowFocus: false,
   });
-
-  const [queue, setQueue] = React.useState<null | Track[]>(null);
 
   const handleQueueCreated = () => {
     setQueue([]);
@@ -99,7 +100,7 @@ const Guild = () => {
         </div>
       </div>
 
-      {queue ? <Queue queue={queue} setQueue={setQueue} guildId={guildId!} /> : "Rip queue :("}
+      {queue ? <Queue queue={queue} setQueue={setQueue} guildId={guildId!} current={currentTrack} /> : "Rip queue :("}
 
       <div className="guild-controls">CONTROLS</div>
     </div>
