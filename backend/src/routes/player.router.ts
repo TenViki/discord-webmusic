@@ -1,10 +1,11 @@
-import { Track } from "discord-player";
+import { QueryType, Track } from "discord-player";
 import { Router } from "express";
 import { player } from "../bot/bot";
 import { discordAuthMiddleware } from "../middleware/discord-auth";
 import { userHasAdminInGuild } from "../services/discord.service";
 import { createQueue } from "../services/music.service";
 import { SocketManager } from "../utils/socket-manager";
+import playdl from "play-dl";
 
 const router = Router();
 
@@ -22,7 +23,14 @@ router.post("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
       return res.status(400).send({ error: "Missing guildId or channelId" });
     }
 
-    const queue = await createQueue(guildId, channelId);
+    const queue = await createQueue(guildId, channelId, {
+      onBeforeCreateStream: async (track, source, _queue) => {
+        // only trap youtube source
+        // track here would be youtube track
+        return (await playdl.stream(track.url, { discordPlayerCompatibility: true })).stream;
+        // we must return readable stream or void (returning void means telling discord-player to look for default extractor)
+      },
+    });
     queue.connect(channelId);
     SocketManager.sendToGuild(guildId, "queue-created");
     return res.status(200).send({ message: "Queue created" });
@@ -73,7 +81,7 @@ router.put("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
     const queue = await player.getQueue(guildId);
     if (!queue) return res.status(404).send({ error: "Queue not created" });
 
-    const trackData = await player.search(track.url, { requestedBy: req.auth.userId }).then((x) => x.tracks[0]);
+    const trackData = await player.search(track.title, { requestedBy: req.auth.userId }).then((x) => x.tracks[0]);
 
     console.log("Trackdata:", trackData, track);
     queue.addTrack(trackData);
