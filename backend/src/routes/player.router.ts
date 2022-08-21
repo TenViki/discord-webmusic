@@ -85,7 +85,7 @@ router.put("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
 
     console.log("Trackdata:", trackData, track);
     queue.addTrack(trackData);
-    queue.play();
+    if (!queue.playing) queue.play();
 
     console.log("added", track, "to", guildId);
 
