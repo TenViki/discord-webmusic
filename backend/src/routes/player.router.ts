@@ -72,7 +72,7 @@ router.get("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
 router.get("/search/", discordAuthMiddleware, async (req, res) => {
   if (!req.auth) return res.status(401).send({ error: "Not authenticated" });
 
-  const query = req.query.query;
+  const query = req.query.query as string;
 
   if (!query) {
     return res.status(400).send({ error: "Missing query" });
@@ -136,6 +136,41 @@ router.put("/:guildId/state", discordAuthMiddleware, async (req, res) => {
     queue.setVolume(volume);
 
     SocketManager.sendToGuild(req.params.guildId, "state-updated", { paused: paused, repeatMode: repeatMode, volume: volume });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ error: "Something went wrong" });
+  }
+});
+
+router.put("/:guildId/action", discordAuthMiddleware, async (req, res) => {
+  if (!req.auth) return res.status(401).send({ error: "Not authenticated" });
+
+  try {
+    if (!(await userHasAdminInGuild(req.auth, req.params.guildId))) return res.status(401).send({ error: "Not authorized" });
+
+    const { action } = req.body as { action: "next" | "prev" | "shuffle" };
+    const { guildId } = req.params;
+
+    if (!guildId || !action) {
+      return res.status(400).send({ error: "Missing guildId or action" });
+    }
+
+    const queue = await player.getQueue(guildId);
+    if (!queue) return res.status(404).send({ error: "Queue not created" });
+
+    if (action === "next") {
+      queue.skip();
+    }
+
+    if (action === "prev") {
+      queue.back();
+    }
+
+    if (action === "shuffle") {
+      queue.shuffle();
+
+      SocketManager.sendToGuild(guildId, "queue-updated", { tracks: queue.tracks });
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).send({ error: "Something went wrong" });
