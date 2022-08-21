@@ -6,6 +6,7 @@ import { getQueue } from "../api/player";
 import { getChannels } from "../api/servers";
 import Button from "../components/button/Button";
 import Channel from "../components/channel/Channel";
+import Controls from "../components/controls/Controls";
 import Loading from "../components/loading/Loading";
 import Queue from "../components/queue/Queue";
 import { UserContext, useSocket } from "../Router";
@@ -102,7 +103,7 @@ const Guild = () => {
 
       {queue ? <Queue queue={queue} setQueue={setQueue} guildId={guildId!} current={currentTrack} /> : "Rip queue :("}
 
-      <div className="guild-controls">CONTROLS</div>
+      {currentTrack && <Controls current={currentTrack} />}
     </div>
   );
 };
