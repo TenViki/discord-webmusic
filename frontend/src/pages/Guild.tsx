@@ -40,6 +40,10 @@ const Guild = () => {
     setQueue(null);
   };
 
+  const handleCurrentTrack = (track: Track) => {
+    setCurrentTrack(track);
+  };
+
   const navigate = useNavigate();
 
   const { data } = useQuery(["guild", guildId], () => getChannels(localStorage.getItem("token")!, guildId!), {
@@ -53,13 +57,13 @@ const Guild = () => {
     socket.on("queue-created", handleQueueCreated);
     socket.on("queue-destroyed", handleQueueDestroyed);
     socket.on("channel-update", setCurrentChannel);
-    socket.on("track-start", setCurrentTrack);
+    socket.on("track-start", handleCurrentTrack);
 
     return () => {
       socket.off("queue-created", handleQueueCreated);
       socket.off("queue-destroyed", handleQueueDestroyed);
       socket.off("channel-update", setCurrentChannel);
-      socket.off("track-start", setCurrentTrack);
+      socket.off("track-start", handleCurrentTrack);
     };
   }, [guildId, socket, data]);
 
