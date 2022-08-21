@@ -23,7 +23,12 @@ player.on("queueEnd", (queue) => {
 });
 
 player.on("trackAdd", (queue) => {
-  SocketManager.sendToGuild(queue.guild.id, "queue-updated", queue.tracks);
+  SocketManager.sendToGuild(queue.guild.id, "queue-update", queue.tracks);
+});
+
+player.on("trackStart", (queue) => {
+  SocketManager.sendToGuild(queue.guild.id, "queue-update", queue.tracks);
+  SocketManager.sendToGuild(queue.guild.id, "track-start", queue.current);
 });
 
 export const setup = async () => {
