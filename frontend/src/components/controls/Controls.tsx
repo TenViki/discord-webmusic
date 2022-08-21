@@ -1,5 +1,16 @@
 import React from "react";
-import { FiPause, FiPlay, FiRepeat, FiShuffle, FiSkipBack, FiSkipForward, FiVolume2 } from "react-icons/fi";
+import {
+  FiPause,
+  FiPlay,
+  FiRepeat,
+  FiShuffle,
+  FiSkipBack,
+  FiSkipForward,
+  FiVolume,
+  FiVolume1,
+  FiVolume2,
+  FiVolumeX,
+} from "react-icons/fi";
 import { setState } from "../../api/player";
 import { SocketContext } from "../../Router";
 import { Track } from "../../types/player";
@@ -33,11 +44,11 @@ const Controls: React.FC<ControlsProps> = ({ current, guildId, paused, repeat, s
 
   const handlePause = () => {
     setPaused(!paused);
-    setState(guildId, !paused, 0, volume, localStorage.getItem("token")!);
+    setState(guildId, !paused, repeat, volume, localStorage.getItem("token")!);
   };
 
   const handleVolumeSend = () => {
-    setState(guildId, paused, 0, volume, localStorage.getItem("token")!);
+    setState(guildId, paused, repeat, volume, localStorage.getItem("token")!);
   };
 
   const handleStateChange = ({ paused, repeatMode, volume }: State) => {
@@ -45,6 +56,11 @@ const Controls: React.FC<ControlsProps> = ({ current, guildId, paused, repeat, s
     setRepeat(repeatMode);
 
     setVolume(volume);
+  };
+
+  const handleRepeat = () => {
+    setRepeat((repeat + 1) % 4);
+    setState(guildId, paused, (repeat + 1) % 4, volume, localStorage.getItem("token")!);
   };
 
   React.useEffect(() => {
@@ -87,7 +103,7 @@ const Controls: React.FC<ControlsProps> = ({ current, guildId, paused, repeat, s
           <button className="controls-button controls-button-prev">
             <FiSkipForward />
           </button>
-          <button className="controls-button controls-button-prev">
+          <button className="controls-button controls-button-prev" onClick={handleRepeat}>
             <FiRepeat />
           </button>
         </div>
@@ -98,18 +114,29 @@ const Controls: React.FC<ControlsProps> = ({ current, guildId, paused, repeat, s
       </div>
 
       <div className="controls-volume">
-        <div className="controls-volume-icon">
-          <FiVolume2 />
+        <div className="repeat-text">
+          - {repeat === 0 && "Off"}
+          {repeat === 1 && "Repeat queue"}
+          {repeat === 2 && "Repeat current"}
+          {repeat === 3 && "Autoplay"}
         </div>
-        <input
-          type="range"
-          min={0}
-          max={100}
-          step={0.01}
-          value={volume}
-          onChange={(e) => setVolume(+e.target.value)}
-          onMouseUp={handleVolumeSend}
-        />
+        <div className="controls-volume-slider">
+          <div className="controls-volume-icon">
+            {volume == 0 && <FiVolumeX />}
+            {volume > 0 && volume <= 33 && <FiVolume />}
+            {volume > 33 && volume <= 66 && <FiVolume1 />}
+            {volume > 66 && <FiVolume2 />}
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={0.01}
+            value={volume}
+            onChange={(e) => setVolume(+e.target.value)}
+            onMouseUp={handleVolumeSend}
+          />
+        </div>
       </div>
     </div>
   );

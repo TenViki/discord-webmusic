@@ -122,6 +122,7 @@ router.put("/:guildId/state", discordAuthMiddleware, async (req, res) => {
     if (!(await userHasAdminInGuild(req.auth, req.params.guildId))) return res.status(401).send({ error: "Not authorized" });
 
     const { paused, repeatMode, volume } = req.body as { paused: boolean; repeatMode: QueueRepeatMode; volume: number };
+    console.log(repeatMode);
 
     if (!req.params.guildId) {
       return res.status(400).send({ error: "Missing guildId" });
