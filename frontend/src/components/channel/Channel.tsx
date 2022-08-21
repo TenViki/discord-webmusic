@@ -6,9 +6,10 @@ import "./Channel.scss";
 interface ChannelProps {
   channel: DiscordChannel;
   guildId: string;
+  current: boolean;
 }
 
-const Channel: React.FC<ChannelProps> = ({ channel, guildId }) => {
+const Channel: React.FC<ChannelProps> = ({ channel, guildId, current }) => {
   const handleCreateQueue = () => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -16,15 +17,9 @@ const Channel: React.FC<ChannelProps> = ({ channel, guildId }) => {
   };
 
   return (
-    <div className={`channel`} onClick={handleCreateQueue}>
+    <div className={`channel ${current ? "active" : ""}`} onClick={handleCreateQueue}>
       {channel.type === DiscordChannelTypes.GUILD_VOICE ? (
-        <svg
-          aria-hidden="true"
-          role="img"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
+        <svg aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24">
           <path
             fill="currentColor"
             fillRule="evenodd"

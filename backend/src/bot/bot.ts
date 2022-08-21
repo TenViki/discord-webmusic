@@ -12,14 +12,17 @@ export const bot = new Client({
 export const player = new Player(bot);
 player.on("botDisconnect", (queue) => {
   SocketManager.sendToGuild(queue.guild.id, "queue-destroyed");
+  SocketManager.sendToGuild(queue.guild.id, "channel-update", null);
 });
 
 player.on("channelEmpty", (queue) => {
   SocketManager.sendToGuild(queue.guild.id, "queue-destroyed");
+  SocketManager.sendToGuild(queue.guild.id, "channel-update", null);
 });
 
 player.on("queueEnd", (queue) => {
   SocketManager.sendToGuild(queue.guild.id, "queue-destroyed");
+  SocketManager.sendToGuild(queue.guild.id, "channel-update", null);
 });
 
 player.on("trackAdd", (queue) => {

@@ -1,12 +1,16 @@
 .channel {
   display: flex;
-  padding: .5rem;
-  border-radius: .3rem;
-  transition: .2s;
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  transition: 0.2s;
   cursor: pointer;
 
+  &.active {
+    background-color: #444;
+  }
+
   svg {
-    margin-right: .5rem;
+    margin-right: 0.5rem;
   }
 
   &:hover {

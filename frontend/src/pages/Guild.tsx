@@ -18,8 +18,13 @@ const Guild = () => {
   const guildId = useParams().guildId;
   const socket = useSocket();
 
+  const [currentCahnnel, setCurrentChannel] = React.useState<null | string>(null);
+
   useQuery(["queue", guildId], () => getQueue(guildId!, localStorage.getItem("token")!), {
-    onSuccess: (data) => setQueue(data?.data?.queue),
+    onSuccess: (data) => {
+      setQueue(data?.data?.queue);
+      setCurrentChannel(data?.data?.channel);
+    },
     refetchOnWindowFocus: false,
   });
 
@@ -45,10 +50,12 @@ const Guild = () => {
 
     socket.on("queue-created", handleQueueCreated);
     socket.on("queue-destroyed", handleQueueDestroyed);
+    socket.on("channel-update", setCurrentChannel);
 
     return () => {
       socket.off("queue-created", handleQueueCreated);
       socket.off("queue-destroyed", handleQueueDestroyed);
+      socket.off("channel-update", setCurrentChannel);
     };
   }, [guildId, socket, data]);
 
@@ -87,7 +94,7 @@ const Guild = () => {
                 channel.type === DiscordChannelTypes.GUILD_VOICE || channel.type === DiscordChannelTypes.GUILD_STAGE_VOICE
             )
             .map((channel) => (
-              <Channel key={channel.id} channel={channel} guildId={data.data.guild.id} />
+              <Channel key={channel.id} channel={channel} guildId={data.data.guild.id} current={currentCahnnel === channel.id} />
             ))}
         </div>
       </div>

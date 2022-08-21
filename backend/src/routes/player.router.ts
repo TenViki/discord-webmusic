@@ -19,6 +19,8 @@ router.post("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
     const { channelId } = req.body;
     const { guildId } = req.params;
 
+    console.log("Create:", channelId);
+
     if (!guildId || !channelId) {
       return res.status(400).send({ error: "Missing guildId or channelId" });
     }
@@ -31,8 +33,12 @@ router.post("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
         // we must return readable stream or void (returning void means telling discord-player to look for default extractor)
       },
     });
+
     queue.connect(channelId);
+
     SocketManager.sendToGuild(guildId, "queue-created");
+    SocketManager.sendToGuild(guildId, "channel-update", channelId);
+
     return res.status(200).send({ message: "Queue created" });
   } catch (error) {
     return res.status(500).send({ error: "Something went wrong" });
@@ -45,10 +51,14 @@ router.get("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
   if (!req.params.guildId) {
     return res.status(400).send({ error: "Missing guildId" });
   }
-  const queue = await player.getQueue(req.params.guildId);
+  const queue = player.getQueue<{
+    channelId: string;
+  }>(req.params.guildId);
   if (!queue) return res.status(200).send({ queue: null });
 
-  return res.status(200).send({ queue: queue.tracks });
+  console.log("Get   :", queue.metadata?.channelId);
+
+  return res.status(200).send({ queue: queue.tracks, current: queue.current, channel: queue?.metadata?.channelId });
 });
 
 router.get("/search/", discordAuthMiddleware, async (req, res) => {
