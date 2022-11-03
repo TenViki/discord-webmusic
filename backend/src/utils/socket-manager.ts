@@ -44,6 +44,23 @@ export class SocketManager {
         }
       } catch (error) {}
     });
+
+    socket.on("music:volume", async ({ guildId, volume }: { guildId: string; volume: number }) => {
+      const auth = SocketManager.socketClients.get(socket.id);
+      console.log("volume", volume);
+      if (!auth) return;
+
+      try {
+        if (await userHasAdminInGuild(auth, guildId)) {
+          const queue = await player.getQueue(guildId);
+          if (!queue) return;
+
+          queue.setVolume(volume);
+
+          SocketManager.sendToGuild(guildId, "music:volume", { volume });
+        }
+      } catch (error) {}
+    });
   }
 
   public static async registerEvent(socket: Socket, event: string, callback: (...args: any[]) => void) {

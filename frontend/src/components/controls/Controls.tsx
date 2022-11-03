@@ -48,7 +48,12 @@ const Controls: React.FC<ControlsProps> = ({ current, guildId, paused, repeat, s
   };
 
   const handleVolumeSend = () => {
-    setState(guildId, paused, repeat, volume, localStorage.getItem("token")!);
+    console.log("Emitting volume send");
+    socket?.emit("music:volume", { volume, guildId });
+  };
+
+  const handleVolumeRecv = (data: { volume: number }) => {
+    setVolume(data.volume);
   };
 
   const handleStateChange = ({ paused, repeatMode, volume }: State) => {
@@ -78,10 +83,12 @@ const Controls: React.FC<ControlsProps> = ({ current, guildId, paused, repeat, s
 
     socket.on("state-updated", handleStateChange);
     socket.on("music:state", handlePlayingChange);
+    socket.on("music:volume", handleVolumeRecv);
 
     return () => {
       socket.off("state-updated", handleStateChange);
       socket.off("music:state", handlePlayingChange);
+      socket.off("music:volume", handleVolumeRecv);
     };
   }, [socket]);
 

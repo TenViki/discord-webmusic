@@ -67,8 +67,6 @@ export const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-  console.log(" " + socket.id);
-
   socket.on("auth", async (token: string) => {
     const user = await validateToken(token);
 

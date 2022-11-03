@@ -27,7 +27,11 @@ router.post("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
       onBeforeCreateStream: async (track, source, _queue) => {
         // only trap youtube source
         // track here would be youtube track
-        return (await playdl.stream(track.url, { discordPlayerCompatibility: true })).stream;
+        try {
+          return (await playdl.stream(track.url, { discordPlayerCompatibility: true })).stream;
+        } catch (error) {
+          return;
+        }
         // we must return readable stream or void (returning void means telling discord-player to look for default extractor)
       },
     });
