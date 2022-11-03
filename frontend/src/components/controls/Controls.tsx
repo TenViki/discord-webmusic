@@ -11,7 +11,7 @@ import {
   FiVolume2,
   FiVolumeX,
 } from "react-icons/fi";
-import { setState } from "../../api/player";
+import { sendAction, setState } from "../../api/player";
 import { SocketContext } from "../../Router";
 import { Track } from "../../types/player";
 import "./Controls.scss";
@@ -63,6 +63,10 @@ const Controls: React.FC<ControlsProps> = ({ current, guildId, paused, repeat, s
     setState(guildId, paused, (repeat + 1) % 4, volume, localStorage.getItem("token")!);
   };
 
+  const handleAction = (action: string) => {
+    sendAction(guildId, action, localStorage.getItem("token")!);
+  };
+
   React.useEffect(() => {
     if (!socket) return;
 
@@ -91,16 +95,16 @@ const Controls: React.FC<ControlsProps> = ({ current, guildId, paused, repeat, s
 
       <div className="controls-buttons">
         <div className="button-group">
-          <button className="controls-button controls-button-prev">
+          <button className="controls-button controls-button-prev" onClick={() => handleAction("shuffle")}>
             <FiShuffle />
           </button>
-          <button className="controls-button controls-button-prev">
+          <button className="controls-button controls-button-prev" onClick={() => handleAction("prev")}>
             <FiSkipBack />
           </button>
           <button className="controls-button controls-button-prev" onClick={handlePause}>
             {paused ? <FiPlay /> : <FiPause />}
           </button>
-          <button className="controls-button controls-button-prev">
+          <button className="controls-button controls-button-prev" onClick={() => handleAction("next")}>
             <FiSkipForward />
           </button>
           <button className="controls-button controls-button-prev" onClick={handleRepeat}>

@@ -65,3 +65,17 @@ export const setState = async (guildId: string, paused: boolean, repeat: number,
     }
   );
 };
+
+export const sendAction = async (guildId: string, action: string, token: string) => {
+  return server.put(
+    `/player/${guildId}/action`,
+    {
+      action: action,
+    },
+    {
+      headers: {
+        Authorization: token,
+      },
+    }
+  );
+};
