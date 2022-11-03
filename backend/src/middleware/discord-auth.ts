@@ -32,7 +32,6 @@ export const validateToken = async (token: string) => {
 };
 
 export const discordAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  console.log("Got request!");
   const token = req.headers.authorization;
   if (!token) return res.status(401).send({ error: "Invalid token" });
 

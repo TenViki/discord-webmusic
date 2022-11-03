@@ -19,8 +19,6 @@ router.post("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
     const { channelId } = req.body;
     const { guildId } = req.params;
 
-    console.log("Create:", channelId);
-
     if (!guildId || !channelId) {
       return res.status(400).send({ error: "Missing guildId or channelId" });
     }
@@ -56,8 +54,6 @@ router.get("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
   }>(req.params.guildId);
   if (!queue) return res.status(200).send({ queue: null });
 
-  console.log("Get   :", queue.metadata?.channelId);
-
   return res.status(200).send({
     queue: queue.tracks,
     current: queue.current,
@@ -78,7 +74,6 @@ router.get("/search/", discordAuthMiddleware, async (req, res) => {
     return res.status(400).send({ error: "Missing query" });
   }
   const tracks = await player.search(query + "", { requestedBy: req.auth.userId });
-  console.log(tracks);
   return res.status(200).send(tracks);
 });
 
@@ -101,11 +96,8 @@ router.put("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
 
     const trackData = await player.search(track.title, { requestedBy: req.auth.userId }).then((x) => x.tracks[0]);
 
-    console.log("Trackdata:", trackData, track);
     queue.addTrack(trackData);
     if (!queue.playing) queue.play();
-
-    console.log("added", track, "to", guildId);
 
     SocketManager.sendToGuild(guildId, "queue-updated", { tracks: queue.tracks });
   } catch (error) {

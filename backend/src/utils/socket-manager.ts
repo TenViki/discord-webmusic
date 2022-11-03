@@ -40,7 +40,6 @@ export class SocketManager {
 
           queue.setPaused(paused);
 
-          console.log("music:state", paused);
           SocketManager.sendToGuild(guildId, "music:state", { paused });
         }
       } catch (error) {}
