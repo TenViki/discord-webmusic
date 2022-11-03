@@ -1,4 +1,5 @@
 import { Socket } from "socket.io";
+import { player } from "../bot/bot";
 import { io } from "../main";
 import { IAuth } from "../models/auth.model";
 import { userHasAdminInGuild } from "../services/discord.service";
@@ -24,6 +25,23 @@ export class SocketManager {
           if (oldGuild) socket.leave(oldGuild);
           socket.join(guildId);
           SocketManager.socketGuilds.set(socket.id, guildId);
+        }
+      } catch (error) {}
+    });
+
+    socket.on("music:state", async ({ guildId, paused }: { guildId: string; paused: boolean }) => {
+      const auth = SocketManager.socketClients.get(socket.id);
+      if (!auth) return;
+
+      try {
+        if (await userHasAdminInGuild(auth, guildId)) {
+          const queue = await player.getQueue(guildId);
+          if (!queue) return;
+
+          queue.setPaused(paused);
+
+          console.log("music:state", paused);
+          SocketManager.sendToGuild(guildId, "music:state", { paused });
         }
       } catch (error) {}
     });

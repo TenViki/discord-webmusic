@@ -44,7 +44,7 @@ const Controls: React.FC<ControlsProps> = ({ current, guildId, paused, repeat, s
 
   const handlePause = () => {
     setPaused(!paused);
-    setState(guildId, !paused, repeat, volume, localStorage.getItem("token")!);
+    socket?.emit("music:state", { paused: !paused, guildId });
   };
 
   const handleVolumeSend = () => {
@@ -52,10 +52,16 @@ const Controls: React.FC<ControlsProps> = ({ current, guildId, paused, repeat, s
   };
 
   const handleStateChange = ({ paused, repeatMode, volume }: State) => {
+    console.log("state change", paused);
     setPaused(paused);
     setRepeat(repeatMode);
 
     setVolume(volume);
+  };
+
+  const handlePlayingChange = ({ paused }: { paused: boolean }) => {
+    console.log("playing", paused);
+    setPaused(paused);
   };
 
   const handleRepeat = () => {
@@ -71,9 +77,11 @@ const Controls: React.FC<ControlsProps> = ({ current, guildId, paused, repeat, s
     if (!socket) return;
 
     socket.on("state-updated", handleStateChange);
+    socket.on("music:state", handlePlayingChange);
 
     return () => {
       socket.off("state-updated", handleStateChange);
+      socket.off("music:state", handlePlayingChange);
     };
   }, [socket]);
 

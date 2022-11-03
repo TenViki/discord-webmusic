@@ -65,7 +65,7 @@ router.get("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
     paused: !queue.playing,
     repeat: queue.repeatMode,
     volume: queue.volume,
-    currentProgress: queue.getPlayerTimestamp(),
+    currentProgress: queue.playing && queue?.getPlayerTimestamp(),
   });
 });
 
