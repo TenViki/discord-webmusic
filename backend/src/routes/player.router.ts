@@ -24,6 +24,7 @@ router.post("/:guildId/queue", discordAuthMiddleware, async (req, res) => {
     }
 
     const queue = await createQueue(guildId, channelId, {
+      leaveOnEndCooldown: 5 * 60 * 1000,
       onBeforeCreateStream: async (track, source, _queue) => {
         // only trap youtube source
         // track here would be youtube track
